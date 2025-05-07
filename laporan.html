@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Keuangan - Riwayat Pembayaran</title>
+  <style>
+    /* Global */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9fafc;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #222;
+    }
+
+    /* Kontainer atas: filter dan tombol sejajar */
+    .top-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .filter-container select,
+    .filter-container input[type="date"] {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .button-container button {
+      padding: 6px 14px;
+      font-size: 14px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .button-container button:hover {
+      background-color: #2c80b4;
+    }
+
+    /* Tabel */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      border: 1px solid #eee;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    /* Total */
+    .total-container {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Laporan Keuangan - Riwayat Pembayaran</h1>
+
+  <!-- Kontrol atas -->
+  <div class="top-controls">
+    <div class="filter-container">
+      <select id="filterNama">
+        <option value="">Pilih Nama</option>
+      </select>
+      <input type="date" id="filterTanggal">
+    </div>
+    <div class="button-container">
+      <button onclick="fetchRiwayatPembayaran()">Pencarian</button>
+      <button onclick="clearFilters()">Clear</button>
+      <button onclick="window.location.href='index.html';">Kembali ke Home</button>
+    </div>
+  </div>
+
+  <!-- Tabel -->
+  <table id="laporanTable">
+    <thead>
+      <tr>
+        <th>Tanggal</th>
+        <th>Nama</th>
+        <th>Jumlah Pembayaran</th>
+        <th>Keterangan</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Total -->
+  <div class="total-container">
+    Total: <span id="totalPembayaran">Rp 0</span>
+  </div>
+
+  <!-- Script -->
+  <script>
+    let allRiwayat = [];
+
+    function fetchRiwayatPembayaran() {
+      const namaFilter = document.getElementById("filterNama").value.toLowerCase();
+      const tanggalFilter = document.getElementById("filterTanggal").value;
+
+      if (allRiwayat.length === 0) {
+        fetch('https://script.google.com/macros/s/AKfycbyGOXVLo_JyphHBIWkYjN0gJAWevvXJPpHbcHcN_UnHlAN1-DSeqXN7wdtchCioiid9Iw/exec?action=riwayat')
+          .then(response => response.json())
+          .then(data => {
+            allRiwayat = data;
+            displayData(data, namaFilter, tanggalFilter);
+            populateNamaDropdown(data);
+          })
+          .catch(error => console.error('Error fetching data:', error));
+      } else {
+        displayData(allRiwayat, namaFilter, tanggalFilter);
+      }
+    }
+
+    function displayData(data, namaFilter, tanggalFilter) {
+      const tbody = document.querySelector("#laporanTable tbody");
+      tbody.innerHTML = "";
+      let totalPembayaran = 0;
+
+      data.forEach(row => {
+        const tanggal = formatDate(row[0]);
+        const nama = row[1].toLowerCase();
+        const pembayaran = parseFloat(row[2]);
+        const keterangan = row[3];
+
+        if (
+          (namaFilter === "" || nama.includes(namaFilter)) &&
+          (tanggalFilter === "" || tanggal === formatDate(tanggalFilter))
+        ) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${tanggal}</td>
+            <td>${row[1]}</td>
+            <td>${formatCurrency(pembayaran)}</td>
+            <td>${keterangan}</td>
+          `;
+          tbody.appendChild(tr);
+          totalPembayaran += pembayaran;
+        }
+      });
+
+      document.getElementById("totalPembayaran").textContent = formatCurrency(totalPembayaran);
+    }
+
+    function formatDate(date) {
+      const d = new Date(date);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+
+    function formatCurrency(amount) {
+      return `Rp ${amount.toLocaleString('id-ID')}`;
+    }
+
+    function populateNamaDropdown(data) {
+      const dropdown = document.getElementById("filterNama");
+      const names = [...new Set(data.map(row => row[1]))];
+      dropdown.innerHTML = '<option value="">Pilih Nama</option>';
+      names.forEach(nama => {
+        const option = document.createElement("option");
+        option.value = nama;
+        option.textContent = nama;
+        dropdown.appendChild(option);
+      });
+    }
+
+    function clearFilters() {
+      document.getElementById("filterNama").value = "";
+      document.getElementById("filterTanggal").value = "";
+      displayData(allRiwayat, "", "");
+    }
+
+    window.onload = fetchRiwayatPembayaran;
+  </script>
+</body>
+</html>
