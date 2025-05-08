@@ -167,7 +167,6 @@ tbody tr:hover {
     font-size: 12px;
   }
 }
-    
   </style>
 </head>
 <body>
@@ -241,12 +240,9 @@ tbody tr:hover {
     function displayData(data, namaFilter, tanggalFilter) {
       const tbody = document.querySelector("#laporanTable tbody");
       tbody.innerHTML = "";
-      let totalPembayaran = 0;
 
-      // Urutkan data dari terbaru ke terlama berdasarkan tanggal
       const sortedData = [...data].sort((a, b) => new Date(b[0]) - new Date(a[0]));
 
-      // Terapkan filter dan pagination
       const filteredData = sortedData.filter(row => {
         const nama = row[1].toLowerCase();
         const tanggal = formatDate(row[0]);
@@ -256,7 +252,13 @@ tbody tr:hover {
         );
       });
 
-      // Hitung batas data berdasarkan halaman saat ini
+      // ✅ Hitung total dari semua hasil filter
+      const totalPembayaran = filteredData.reduce((sum, row) => {
+        const jumlah = parseFloat(row[2]);
+        return sum + (isNaN(jumlah) ? 0 : jumlah);
+      }, 0);
+
+      // Pagination
       const startIndex = (currentPage - 1) * rowsPerPage;
       const endIndex = startIndex + rowsPerPage;
       const currentPageData = filteredData.slice(startIndex, endIndex);
@@ -275,12 +277,10 @@ tbody tr:hover {
           <td>${keterangan}</td>
         `;
         tbody.appendChild(tr);
-        totalPembayaran += pembayaran;
       });
 
       document.getElementById("totalPembayaran").textContent = formatCurrency(totalPembayaran);
 
-      // Update pagination
       const totalPages = Math.ceil(filteredData.length / rowsPerPage);
       document.getElementById("pageNumber").textContent = currentPage;
       document.getElementById("prevButton").disabled = currentPage === 1;
@@ -294,7 +294,9 @@ tbody tr:hover {
       } else if (direction === 'prev' && currentPage > 1) {
         currentPage--;
       }
-      displayData(allRiwayat, "", "");
+      const namaFilter = document.getElementById("filterNama").value.toLowerCase();
+      const tanggalFilter = document.getElementById("filterTanggal").value;
+      displayData(allRiwayat, namaFilter, tanggalFilter);
     }
 
     function formatDate(date) {
@@ -324,6 +326,7 @@ tbody tr:hover {
     function clearFilters() {
       document.getElementById("filterNama").value = "";
       document.getElementById("filterTanggal").value = "";
+      currentPage = 1;
       displayData(allRiwayat, "", "");
     }
 
