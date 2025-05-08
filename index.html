@@ -2,6 +2,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Saldo Pemain</title>
   <style>
     body {
@@ -231,12 +233,7 @@
   }
 
   table, thead, tbody, th, td, tr {
-    display: block;
     width: 100%;
-  }
-
-  thead {
-    display: none;
   }
 
   tr {
@@ -252,18 +249,6 @@
     padding: 8px;
     border: none;
     position: relative;
-  }
-
-  td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-    color: #4A90E2;
-  }
-
-  .aksi-td {
-    display: block !important;
   }
 
   .table-actions {
@@ -284,7 +269,7 @@
   <h1>PB SEGITIGA</h1>
   
   <!-- Form Tambah Nama -->
-  <h3>Pencatatan Shutellkok</h3>
+  <h3>Pencatatan Shutelkok</h3>
   <input id="namaBaru" placeholder="Nama Pemain Baru">
   <button onclick="tambahNamaBaru()">Tambah Nama Pemain</button>
 
