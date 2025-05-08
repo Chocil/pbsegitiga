@@ -1,422 +1,352 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kas PB SEGITIGA</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Keuangan</title>
   <style>
-/* Reset & Umum */
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f6f9;
-  padding: 10px;
-  margin: auto;
-  max-width: 900px;
-  font-size: 0.72em;
-}
-
-/* Judul */
-h2, h3 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 15px;
-}
-
-/* Form Container */
-.form-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 15px;
-}
-
-.form-container > * {
-  flex: 1 1 100%;
-}
-
-input, select {
-  padding: 5px;
-  font-size: 0.72em;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Tombol Umum */
-button {
-  padding: 5px 10px;
-  font-size: 0.72em;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: #007BFF;
-  color: white;
-  transition: background 0.3s;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* Tombol Kembali */
-.back-button {
-  display: inline-block;
-  margin-bottom: 10px;
-  padding: 4px 8px;
-  font-size: 0.72em;
-  background-color: #6c757d;
-  color: white;
-  border-radius: 4px;
-  text-decoration: none;
-}
-
-.back-button:hover {
-  background-color: #5a6268;
-}
-
-/* Tabel */
-.table-wrapper {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.7em;
-  background-color: white;
-  border-radius: 4px;
-  overflow: hidden;
-  min-width: 400px;
-}
-
-th, td {
-  padding: 5px 6px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-  white-space: nowrap;
-}
-
-th {
-  background-color: #007BFF;
-  color: white;
-  font-weight: bold;
-}
-
-/* Zebra Striping */
-tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-/* Tombol Aksi */
-.action-btns {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-}
-
-.edit-btn, .delete-btn {
-  background: none;
-  border: none;
-  padding: 2px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.edit-btn img, .delete-btn img {
-  width: 12px;
-  height: 12px;
-}
-
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-
-.modal-content {
-  background: white;
-  padding: 12px;
-  border-radius: 6px;
-  width: 95%;
-  max-width: 340px;
-  font-size: 0.75em;
-}
-
-.modal-header {
-  font-size: 0.85em;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.modal-footer {
-  text-align: right;
-  margin-top: 10px;
-}
-
-.close-btn {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 5px 8px;
-  font-size: 0.72em;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  background-color: #c82333;
-}
-
-/* Media Query */
-@media (min-width: 600px) {
-  .form-container > input,
-  .form-container > select {
-    flex: 1 1 calc(25% - 6px);
-  }
-
-  .form-container > button {
-    flex: 1 1 100%;
-    max-width: 200px;
-    align-self: flex-end;
-  }
-
-  th, td {
-    padding: 6px 8px;
-  }
-}
-
-
+    * {
+      box-sizing: border-box;
+    }
+  
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+  
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  
+    .form-container {
+      max-width: 100%; /* Full width for smaller screens */
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    .form-container input,
+    .form-container select,
+    .form-container button {
+      padding: 12px; /* Increased padding for better usability */
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%; /* Full width */
+    }
+  
+    .form-container button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    .form-container button:hover {
+      background-color: #45a049;
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+  
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+  
+    th {
+      background-color: #2196F3;
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+  
+    .jenis-teks.masuk {
+      color: green;
+      font-weight: bold;
+    }
+  
+    .jenis-teks.keluar {
+      color: red;
+      font-weight: bold;
+    }
+  
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+    }
+  
+    .modal-content {
+      background-color: #fff;
+      margin: auto;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+  
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 10px;
+        gap: 10px;
+      }
+  
+      .form-container input,
+      .form-container select,
+      .form-container button {
+        font-size: 12px;
+      }
+  
+      table {
+        overflow-x: auto;
+        display: block;
+        max-width: 100%;
+        margin-top: 20px;
+      }
+  
+      th, td {
+        font-size: 12px; /* Smaller font for better readability on small screens */
+      }
+  
+      button {
+        font-size: 12px;
+        padding: 8px;
+      }
+  
+      .table-container {
+        overflow-x: auto;
+      }
+    }
   </style>
+  
+
 </head>
 <body>
-  <h2>KAS PB SEGITAGA</h2>
 
-  <input type="date" id="tanggal" />
-  <input type="text" id="keterangan" placeholder="Keterangan" />
-  <input type="text" id="jumlah" placeholder="Jumlah" />
-  <select id="jenis">
-    <option value="Masuk">Uang Masuk</option>
-    <option value="Keluar">Uang Keluar</option>
-  </select>
-  <button id="submitButton" onclick="submitData()">Tambah Transaksi</button>
+  <h2>Laporan Keuangan</h2>
 
-  <h3>Riwayat Transaksi</h3>
-  <button onclick="openRekapModal()">Rekap</button>
-  <a href="index.html" class="back-button">Halaman Utama</a>
+  <div class="form-container">
+    <input type="date" id="tanggal" required>
+    <input type="text" id="keterangan" placeholder="Keterangan" required>
+    <input type="number" id="jumlah" placeholder="Jumlah" required>
+    <select id="jenis" required>
+      <option value="masuk">Uang Masuk</option>
+      <option value="keluar">Uang Keluar</option>
+    </select>
+    <button onclick="tambahTransaksi()">Tambah Transaksi</button>
+  </div>
 
-  <table id="tabel">
-    <thead>
-      <tr>
-        <th>Tanggal</th>
-        <th>Keterangan</th>
-        <th>Jumlah</th>
-        <th>Jenis</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-container">
+    <table id="data-transaksi">
+      <button onclick="showRekapanKas()" style="padding: 10px; background-color: #2196F3; color: white;">Rekapan KAS</button>
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Keterangan</th>
+          <th>Jumlah</th>
+          <th>Jenis</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-  <!-- Modal Edit -->
-  <div id="modal" class="modal">
+  <!-- Modal Edit Transaksi -->
+  <div id="myModal" class="modal">
     <div class="modal-content">
-      <div class="modal-header">Edit Transaksi</div>
-      <input type="date" id="modal-tanggal" />
-      <input type="text" id="modal-keterangan" placeholder="Keterangan" />
-      <input type="text" id="modal-jumlah" placeholder="Jumlah" />
-      <select id="modal-jenis">
-        <option value="Masuk">Uang Masuk</option>
-        <option value="Keluar">Uang Keluar</option>
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>Edit Transaksi</h3>
+      <input type="date" id="edit-tanggal" required>
+      <input type="text" id="edit-keterangan" placeholder="Keterangan" required>
+      <input type="number" id="edit-jumlah" placeholder="Jumlah" required>
+      <select id="edit-jenis" required>
+        <option value="masuk">Uang Masuk</option>
+        <option value="keluar">Uang Keluar</option>
       </select>
-      <div class="modal-footer">
-        <button class="close-btn" onclick="closeModal()">Batal</button>
-        <button onclick="updateTransaction()">Update</button>
-      </div>
+      <button onclick="simpanEdit()">Simpan Edit</button>
     </div>
   </div>
 
-  <!-- Modal Rekap -->
-  <div id="rekap-modal" class="modal">
+  <!-- Modal Rekapan KAS -->
+  <div id="rekapanModal" class="modal">
     <div class="modal-content">
-      <div class="modal-header">Rekapitulasi Keuangan</div>
-      <p><strong>Total Masuk:</strong> <span id="rekap-masuk">Rp0</span></p>
-      <p><strong>Total Keluar:</strong> <span id="rekap-keluar">Rp0</span></p>
-      <p><strong>Total Kas:</strong> <span id="rekap-kas">Rp0</span></p>
-      <div class="modal-footer">
-        <button class="close-btn" onclick="closeRekapModal()">Tutup</button>
-      </div>
+      <span class="close" onclick="closeRekapanModal()">&times;</span>
+      <h3>Rekapan Kas</h3>
+      <p>Total Uang Masuk: <strong id="rekap-masuk">-</strong></p>
+      <p>Total Uang Keluar: <strong id="rekap-keluar">-</strong></p>
+      <p><strong>Saldo Kas: <span id="rekap-saldo">-</span></strong></p>
     </div>
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw_Ginq1mLM2xzdD2eryqrkxzlL5RUsk553OODE8cN3G9A9fQU-82bdErkqG0KDwWTuWg/exec';
+    const sheetUrl = 'https://script.google.com/macros/s/AKfycbyRsN7XZr-PH94UcuAU10hUw8XYFkmA83eUYzTKiSJgbCbnLo3L0NI6HCtbW6qGq3rK-A/exec'; // Ganti dengan URL Apps Script Anda
+    let selectedKode = null;
 
-    document.getElementById("jumlah").addEventListener("input", function(e) {
-      let value = e.target.value.replace(/[^\d]/g, '');
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      e.target.value = value;
-    });
-
-    async function submitData() {
-      const submitButton = document.getElementById("submitButton");
-      submitButton.disabled = true;
-
-      const tanggal = document.getElementById("tanggal").value;
-      const keterangan = document.getElementById("keterangan").value;
-      let jumlah = document.getElementById("jumlah").value.replace(/\./g, '');
-      const jenis = document.getElementById("jenis").value;
-
-      if (!tanggal || !keterangan || !jumlah) {
-        alert("Semua kolom harus diisi.");
-        submitButton.disabled = false;
-        return;
-      }
-
-      try {
-        await fetch(`${scriptURL}?action=addTransaction&tanggal=${encodeURIComponent(tanggal)}&keterangan=${encodeURIComponent(keterangan)}&jumlah=${encodeURIComponent(jumlah)}&jenis=${encodeURIComponent(jenis)}`);
-        alert("Transaksi berhasil ditambahkan!");
-        document.getElementById("tanggal").value = "";
-        document.getElementById("keterangan").value = "";
-        document.getElementById("jumlah").value = "";
-        document.getElementById("jenis").value = "Masuk";
-        loadData();
-      } catch (error) {
-        alert("Terjadi kesalahan saat menambahkan transaksi.");
-      }
-
-      submitButton.disabled = false;
-    }
-
-    async function loadData() {
-      const res = await fetch(`${scriptURL}?action=getData`);
-      const data = await res.json();
-
-      data.sort((a, b) => new Date(b[0]) - new Date(a[0]));
-
-      const tbody = document.querySelector("#tabel tbody");
-      tbody.innerHTML = "";
-      data.forEach((row, index) => {
-        const tr = document.createElement("tr");
-
-        row[0] = formatDate(row[0]);
-        row[2] = formatCurrency(row[2]);
-
-        row.forEach((cell, i) => {
-          const td = document.createElement("td");
-          td.textContent = cell;
-          if (i === 3) td.style.color = cell === "Masuk" ? "green" : "red";
-          tr.appendChild(td);
-        });
-
-        const tdActions = document.createElement("td");
-        tdActions.classList.add("action-btns");
-
-        const editBtn = document.createElement("button");
-        editBtn.classList.add("edit-btn");
-        editBtn.innerHTML = '<img src="image/pen.png" alt="Edit">';
-        editBtn.onclick = () => openModal(index, row);
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.classList.add("delete-btn");
-        deleteBtn.innerHTML = '<img src="image/trash.png" alt="Hapus">';
-        deleteBtn.onclick = () => confirmDelete(index);
-
-        tdActions.appendChild(editBtn);
-        tdActions.appendChild(deleteBtn);
-        tr.appendChild(tdActions);
-
-        tbody.appendChild(tr);
-      });
-    }
-
-    function formatDate(dateStr) {
-      const date = new Date(dateStr);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
+    function formatTanggal(tanggal) {
+      const d = new Date(tanggal);
+      const day = d.getDate().toString().padStart(2, '0');
+      const month = (d.getMonth() + 1).toString().padStart(2, '0');
+      const year = d.getFullYear();
       return `${day}-${month}-${year}`;
     }
 
-    function formatCurrency(amount) {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
+    function formatRupiah(angka) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0
+      }).format(angka);
     }
 
-    async function deleteTransaction(index) {
-      await fetch(`${scriptURL}?action=deleteTransaction&id=${index}`);
-      loadData();
-      alert("Data berhasil dihapus.");
+    async function getData() {
+      const response = await fetch(`${sheetUrl}?action=getData`);
+      const data = await response.json();
+
+      data.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+
+      const tbody = document.querySelector('#data-transaksi tbody');
+      tbody.innerHTML = '';
+
+      let totalMasuk = 0;
+      let totalKeluar = 0;
+
+      data.forEach(row => {
+        const [tanggal, keterangan, jumlah, jenis, kode] = row;
+        const formattedDate = formatTanggal(tanggal);
+        const formattedJumlah = formatRupiah(jumlah);
+        const jenisLabel = jenis === 'masuk' ? 'Masuk' : 'Keluar';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${formattedDate}</td>
+          <td>${keterangan}</td>
+          <td>${formattedJumlah}</td>
+          <td><span class="jenis-teks ${jenis}">${jenisLabel}</span></td>
+          <td>
+              <button onclick="editTransaksi('${kode}', '${tanggal}', '${keterangan}', '${jumlah}', '${jenis}')" style="background:none; border:none;">
+              <img src="image/pen.png" alt="Edit" width="20" height="20">
+              </button>
+              <button onclick="hapusTransaksi('${kode}')" style="background:none; border:none;">
+              <img src="image/trash.png" alt="Hapus" width="20" height="20">
+              </button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+
+        if (jenis === 'masuk') {
+          totalMasuk += parseInt(jumlah);
+        } else if (jenis === 'keluar') {
+          totalKeluar += parseInt(jumlah);
+        }
+      });
+
+      document.getElementById('rekap-masuk').textContent = formatRupiah(totalMasuk);
+      document.getElementById('rekap-keluar').textContent = formatRupiah(totalKeluar);
+      document.getElementById('rekap-saldo').textContent = formatRupiah(totalMasuk - totalKeluar);
     }
 
-    function confirmDelete(index) {
-      if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-        deleteTransaction(index);
+    async function tambahTransaksi() {
+      const tanggal = document.getElementById('tanggal').value;
+      const keterangan = document.getElementById('keterangan').value;
+      const jumlah = document.getElementById('jumlah').value;
+      const jenis = document.getElementById('jenis').value;
+
+      const response = await fetch(`${sheetUrl}?action=addTransaction&tanggal=${tanggal}&keterangan=${keterangan}&jumlah=${jumlah}&jenis=${jenis}`);
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Transaksi berhasil ditambahkan!');
+        getData();
+        document.getElementById('tanggal').value = '';
+        document.getElementById('keterangan').value = '';
+        document.getElementById('jumlah').value = '';
+        document.getElementById('jenis').value = 'masuk';
+      } else {
+        alert('Gagal menambahkan transaksi.');
       }
     }
 
-    function openModal(index, rowData) {
-      const tanggal = rowData[0].split('-').reverse().join('-');
-      document.getElementById("modal-tanggal").value = tanggal;
-      document.getElementById("modal-keterangan").value = rowData[1];
-      document.getElementById("modal-jumlah").value = rowData[2].replace(/[^\d]/g, '');
-      document.getElementById("modal-jenis").value = rowData[3];
-      document.getElementById("modal").style.display = "flex";
-      document.getElementById("modal").dataset.index = index;
+    function editTransaksi(kode, tanggal, keterangan, jumlah, jenis) {
+      selectedKode = kode;
+      document.getElementById('edit-tanggal').value = tanggal;
+      document.getElementById('edit-keterangan').value = keterangan;
+      document.getElementById('edit-jumlah').value = jumlah;
+      document.getElementById('edit-jenis').value = jenis;
+      document.getElementById('myModal').style.display = 'block';
+    }
+
+    async function simpanEdit() {
+      const tanggal = document.getElementById('edit-tanggal').value;
+      const keterangan = document.getElementById('edit-keterangan').value;
+      const jumlah = document.getElementById('edit-jumlah').value;
+      const jenis = document.getElementById('edit-jenis').value;
+
+      const response = await fetch(`${sheetUrl}?action=updateTransaction&kode=${selectedKode}&tanggal=${tanggal}&keterangan=${keterangan}&jumlah=${jumlah}&jenis=${jenis}`);
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Transaksi berhasil diperbarui!');
+        getData();
+        closeModal();
+      } else {
+        alert('Gagal memperbarui transaksi.');
+      }
     }
 
     function closeModal() {
-      document.getElementById("modal").style.display = "none";
+      document.getElementById('myModal').style.display = 'none';
     }
 
-    async function updateTransaction() {
-      const index = document.getElementById("modal").dataset.index;
-      const tanggal = document.getElementById("modal-tanggal").value;
-      const keterangan = document.getElementById("modal-keterangan").value;
-      let jumlah = document.getElementById("modal-jumlah").value.replace(/\./g, '');
-      const jenis = document.getElementById("modal-jenis").value;
+    async function hapusTransaksi(kode) {
+      const response = await fetch(`${sheetUrl}?action=deleteTransaction&kode=${kode}`);
+      const result = await response.json();
 
-      await fetch(`${scriptURL}?action=updateTransaction&id=${index}&tanggal=${encodeURIComponent(tanggal)}&keterangan=${encodeURIComponent(keterangan)}&jumlah=${encodeURIComponent(jumlah)}&jenis=${encodeURIComponent(jenis)}`);
-
-      alert("Data berhasil diubah.");
-      closeModal();
-      loadData();
+      if (result.success) {
+        alert('Transaksi berhasil dihapus!');
+        getData();
+      } else {
+        alert('Gagal menghapus transaksi.');
+      }
     }
 
-    function openRekapModal() {
-      const rows = document.querySelectorAll("#tabel tbody tr");
-      let totalMasuk = 0, totalKeluar = 0;
-
-      rows.forEach(row => {
-        const jumlahText = row.children[2].textContent.replace(/[^\d]/g, '');
-        const jumlah = parseInt(jumlahText) || 0;
-        const jenis = row.children[3].textContent;
-
-        if (jenis === "Masuk") totalMasuk += jumlah;
-        if (jenis === "Keluar") totalKeluar += jumlah;
-      });
-
-      document.getElementById("rekap-masuk").textContent = formatCurrency(totalMasuk);
-      document.getElementById("rekap-keluar").textContent = formatCurrency(totalKeluar);
-      document.getElementById("rekap-kas").textContent = formatCurrency(totalMasuk - totalKeluar);
-      document.getElementById("rekap-modal").style.display = "flex";
+    function showRekapanKas() {
+      document.getElementById('rekapanModal').style.display = 'block';
     }
 
-    function closeRekapModal() {
-      document.getElementById("rekap-modal").style.display = "none";
+    function closeRekapanModal() {
+      document.getElementById('rekapanModal').style.display = 'none';
     }
 
-    loadData();
+    window.onload = getData;
   </script>
+
 </body>
 </html>
