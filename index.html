@@ -245,19 +245,21 @@
   }
 
   td {
-  text-align: left;
-  padding: 10px;
-  font-size: 13px; /* Perkecil tulisan nama */
-  border: none;
-  position: relative;
-  min-width: 250px; /* Perlebar kolom (bisa disesuaikan) */
-  word-break: break-word;
+    text-align: left;
+    padding: 8px;
+    border: none;
+    position: relative;
+  }
+
+  td[data-label="Nama"],
+th:nth-child(1) {
+  width: 40%; /* atau bisa 25% */
 }
 
-table {
-  font-size: 14px; /* Ukuran teks tabel keseluruhan */
+td[data-label="Saldo"],
+th:nth-child(2) {
+  width: 60%; /* sisanya */
 }
-
 
   .table-actions {
     justify-content: start;
@@ -314,7 +316,7 @@ table {
   <button id="adminBtn" onclick="toggleLogin()">Login Admin</button>
   <!-- Tombol Riwayat -->
   <button onclick="window.location.href='laporan.html'">Riwayat</button>
-
+  
   <!-- Modal Bayar -->
   <div id="overlay" onclick="tutupModal()"></div>
   <div id="modal">
