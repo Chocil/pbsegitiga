@@ -5,90 +5,128 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Laporan Keuangan - Riwayat Pembayaran</title>
   <style>
-    /* Global */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f9fafc;
-      color: #333;
-    }
+/* Global */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f6f8;
+  color: #333;
+}
 
-    h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      color: #222;
-    }
+h1 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #222;
+}
 
-    /* Kontainer atas: filter dan tombol sejajar */
-    .top-controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
+/* Kontainer atas: filter dan tombol sejajar */
+.top-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
 
-    .filter-container select,
-    .filter-container input[type="date"] {
-      padding: 6px 10px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      background-color: #fff;
-    }
+.filter-container select,
+.filter-container input[type="date"] {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+}
 
-    .button-container {
-      display: flex;
-      gap: 10px;
-    }
+.button-container {
+  display: flex;
+  gap: 10px;
+}
 
-    .button-container button {
-      padding: 6px 14px;
-      font-size: 14px;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
+.button-container button {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
 
-    .button-container button:hover {
-      background-color: #2c80b4;
-    }
+.button-container button:hover {
+  background-color: #2c80b4;
+  transform: scale(1.02);
+}
 
-    /* Tabel */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #fff;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
+/* Tabel */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
 
-    th, td {
-      border: 1px solid #eee;
-      padding: 10px;
-      text-align: left;
-    }
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+}
 
-    th {
-      background-color: #f0f0f0;
-      color: #333;
-    }
+th {
+  background-color: #e9eef3;
+  color: #444;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+}
 
-    tr:hover {
-      background-color: #f9f9f9;
-    }
+td:nth-child(3) {
+  text-align: right;
+  font-weight: 500;
+}
 
-    /* Total */
-    .total-container {
-      margin-top: 20px;
-      font-size: 16px;
-      font-weight: bold;
-    }
+tbody tr:nth-child(odd) {
+  background-color: #fdfdfd;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f3f8fc;
+}
+
+tbody tr:hover {
+  background-color: #e3f1fa !important;
+  transition: background-color 0.2s;
+}
+
+/* Total */
+.total-container {
+  margin-top: 24px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+  th, td {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .button-container button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+    
   </style>
 </head>
 <body>
@@ -116,7 +154,7 @@
       <tr>
         <th>Tanggal</th>
         <th>Nama</th>
-        <th>Jumlah Pembayaran</th>
+        <th>Pembayaran</th>
         <th>Keterangan</th>
       </tr>
     </thead>
