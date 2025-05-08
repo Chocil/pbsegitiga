@@ -245,11 +245,19 @@
   }
 
   td {
-    text-align: left;
-    padding: 8px;
-    border: none;
-    position: relative;
-  }
+  text-align: left;
+  padding: 10px;
+  font-size: 13px; /* Perkecil tulisan nama */
+  border: none;
+  position: relative;
+  min-width: 250px; /* Perlebar kolom (bisa disesuaikan) */
+  word-break: break-word;
+}
+
+table {
+  font-size: 14px; /* Ukuran teks tabel keseluruhan */
+}
+
 
   .table-actions {
     justify-content: start;
@@ -306,7 +314,7 @@
   <button id="adminBtn" onclick="toggleLogin()">Login Admin</button>
   <!-- Tombol Riwayat -->
   <button onclick="window.location.href='laporan.html'">Riwayat</button>
-  
+
   <!-- Modal Bayar -->
   <div id="overlay" onclick="tutupModal()"></div>
   <div id="modal">
