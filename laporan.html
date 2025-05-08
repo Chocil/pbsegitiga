@@ -20,6 +20,15 @@ h1 {
   color: #3498db;
 }
 
+/* Loader */
+#loader {
+  display: none;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
 /* Kontainer atas: filter dan tombol sejajar */
 .top-controls {
   display: flex;
@@ -79,7 +88,6 @@ th {
   background-color: #e9eef3;
   color: #444;
   font-weight: 600;
-  text-align: left;
   text-transform: uppercase;
   font-size: 13px;
 }
@@ -88,7 +96,6 @@ td:nth-child(3) {
   text-align: left;
   font-weight: 500;
 }
-
 
 tbody tr:nth-child(odd) {
   background-color: #fdfdfd;
@@ -175,6 +182,9 @@ tbody tr:hover {
 
   <h1>Riwayat Pembayaran</h1>
 
+  <!-- Loader -->
+  <div id="loader">Sabar Cok...</div>
+
   <!-- Kontrol atas -->
   <div class="top-controls">
     <div class="filter-container">
@@ -224,6 +234,9 @@ tbody tr:hover {
     function fetchRiwayatPembayaran() {
       const namaFilter = document.getElementById("filterNama").value.toLowerCase();
       const tanggalFilter = document.getElementById("filterTanggal").value;
+      const loader = document.getElementById("loader");
+
+      loader.style.display = 'block'; // tampilkan loader
 
       if (allRiwayat.length === 0) {
         fetch('https://script.google.com/macros/s/AKfycbyGOXVLo_JyphHBIWkYjN0gJAWevvXJPpHbcHcN_UnHlAN1-DSeqXN7wdtchCioiid9Iw/exec?action=riwayat')
@@ -232,10 +245,15 @@ tbody tr:hover {
             allRiwayat = data;
             displayData(data, namaFilter, tanggalFilter);
             populateNamaDropdown(data);
+            loader.style.display = 'none'; // sembunyikan loader
           })
-          .catch(error => console.error('Error fetching data:', error));
+          .catch(error => {
+            console.error('Error fetching data:', error);
+            loader.style.display = 'none';
+          });
       } else {
         displayData(allRiwayat, namaFilter, tanggalFilter);
+        loader.style.display = 'none'; // sembunyikan loader
       }
     }
 
@@ -254,13 +272,13 @@ tbody tr:hover {
         );
       });
 
-      // ✅ Hitung total dari semua hasil filter
+      // hitung total dari seluruh data hasil filter
       const totalPembayaran = filteredData.reduce((sum, row) => {
         const jumlah = parseFloat(row[2]);
         return sum + (isNaN(jumlah) ? 0 : jumlah);
       }, 0);
 
-      // Pagination
+      // pagination
       const startIndex = (currentPage - 1) * rowsPerPage;
       const endIndex = startIndex + rowsPerPage;
       const currentPageData = filteredData.slice(startIndex, endIndex);
