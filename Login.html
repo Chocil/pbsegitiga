@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Data Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 50px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        img {
+            width: 200px; /* Memperbesar gambar menjadi 200px */
+            height: auto;
+            margin-bottom: 10px;
+    
+        }
+
+        .logopb {
+            width: 200px; /* Menyesuaikan ukuran logo PB */
+            height: auto;
+            margin: 0 auto 20px auto; /* Menambahkan margin bawah dan menjadikannya pusat */
+            display: block; /* Memastikan gambar ditampilkan sebagai block untuk centering */
+        }
+
+        h1 {
+            font-family: 'Anta', sans-serif; /* Font yang disebutkan */
+            text-align: center;
+            color: #17007c;
+        }
+
+        p {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            background-color: #13007c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-back:hover {
+            background-color: #0d0059;
+        }
+
+        .admin-form {
+            margin-top: 20px;
+            display: none; /* Form disembunyikan secara default */
+            text-align: center; /* Memastikan form berada di tengah secara horizontal */
+        }
+
+        .admin-form input[type="password"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .admin-form input[type="submit"] {
+            background-color: #17007c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .admin-form input[type="submit"]:hover {
+            background-color: #0d0059;
+        }
+
+        .btn-container {
+            margin-bottom: 20px;
+            display: flex; /* Menggunakan flexbox untuk menempatkan tombol secara horizontal */
+            flex-direction: column; /* Mengatur tombol secara vertikal */
+            align-items: center; /* Menempatkan tombol di tengah secara horizontal */
+        }
+
+        .btn-container a,
+        .btn-container button {
+            margin: 10px 0; /* Jarak atas dan bawah antara tombol */
+        }
+    </style>
+    <script>
+        function showPasswordForm() {
+            document.getElementById('password-form').style.display = 'block';
+            document.getElementById('show-button').style.display = 'none';
+        }
+
+        function validatePassword(event) {
+            event.preventDefault(); // Mencegah form dari submit otomatis
+            const password = document.getElementById('password').value;
+            if (password === 'adminpb') {
+                window.location.href = 'admin.html'; // Arahkan ke kas.html jika password benar
+            } else {
+                alert('Password salah. Silakan coba lagi.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img class="logopb" src="image/logo.png" alt="Logo PB">
+        <h1>Data Admin</h1>
+        <p>Hanya admin yang bisa akses</p>
+
+        <!-- Container untuk tombol-tombol -->
+        <div class="btn-container">
+            <a href="index.html" class="btn-back">Kembali ke Beranda</a>
+            <button id="show-button" class="btn-back" onclick="showPasswordForm()">Masuk</button>
+        </div>
+
+        <!-- Form untuk login admin -->
+        <div id="password-form" class="admin-form">
+            <form onsubmit="validatePassword(event)">
+                <input type="password" id="password" placeholder="Masukkan Password" required>
+                <input type="submit" value="Masuk">
+            </form>
+        </div>
+        <img src="image/icon3.gif" alt="Icon Admin">
+    </div>
+</body>
+</html>
