@@ -1,196 +1,405 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laporan Keuangan Admin - Uang Masuk & Uang Keluar</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Laporan Keuangan</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h1 { margin-top: 30px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .filter-container { margin-top: 20px; }
-    .filter-container input { padding: 8px; margin-right: 10px; }
-    .total-container { margin-top: 20px; font-size: 18px; }
-    .button-container { margin-top: 20px; }
-    .button-container button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
-    .form-container { margin-top: 20px; }
-    .form-container input, .form-container textarea, .form-container button {
-      padding: 8px;
-      margin-right: 10px;
-      margin-top: 10px;
-      display: block;
-    }
+    /* Global Reset dan Font */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f6f9;
+  padding: 20px;
+  margin: auto;
+  max-width: 900px;
+}
+
+/* Judul */
+h2, h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Container Form Responsif */
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.form-container > * {
+  flex: 1 1 100%;
+}
+
+/* Responsif di layar besar */
+@media (min-width: 600px) {
+  .form-container > input,
+  .form-container > select {
+    flex: 1 1 calc(25% - 10px);
+  }
+
+  .form-container > button {
+    flex: 1 1 100%;
+    max-width: 200px;
+    align-self: flex-end;
+  }
+}
+
+/* Input dan Select */
+input, select {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Tombol Submit */
+button {
+  padding: 10px;
+  font-size: 1em;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Tabel */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.95em;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background: #007BFF;
+  color: white;
+}
+
+/* Aksi Tombol Edit & Hapus */
+.action-btns {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-btn img, .delete-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Modal Styling */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modal-header {
+  font-size: 1.4em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-footer {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.close-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #c82333;
+}
+
+.back-button {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background-color: #6c757d;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.95em;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+}
+
   </style>
 </head>
 <body>
-  <h1>Laporan Keuangan Admin - Uang Masuk & Uang Keluar</h1>
+  <h2>Laporan Keuangan</h2>
 
-  <!-- Form Input untuk Data Transaksi -->
-  <div class="form-container">
-    <h3>Tambah Transaksi</h3>
-    <form id="transaksiForm">
-      <label for="tanggal">Tanggal:</label>
-      <input type="date" id="tanggal" required>
+  <input type="date" id="tanggal" />
+  <input type="text" id="keterangan" placeholder="Keterangan" />
+  <input type="text" id="jumlah" placeholder="Jumlah" />
+  <select id="jenis">
+    <option value="Masuk">Uang Masuk</option>
+    <option value="Keluar">Uang Keluar</option>
+  </select>
+  <button id="submitButton" onclick="submitData()">Tambah Transaksi</button>
 
-      <label for="uangMasuk">Uang Masuk (IDR):</label>
-      <input type="number" id="uangMasuk" required>
+  <h3>Riwayat Transaksi</h3>
+  <button onclick="openRekapModal()">Rekap</button>
+  <a href="index.html" class="back-button">Halaman Utama</a>
 
-      <label for="uangKeluar">Uang Keluar (IDR):</label>
-      <input type="number" id="uangKeluar" required>
-
-      <label for="keterangan">Keterangan:</label>
-      <textarea id="keterangan" required></textarea>
-
-      <button type="submit">Kirim Data</button>
-    </form>
-  </div>
-
-  <!-- Filter berdasarkan Tanggal -->
-  <div class="filter-container">
-    <input type="date" id="filterTanggal">
-  </div>
-
-  <div class="button-container">
-    <button onclick="fetchTransaksi()">Pencarian</button>
-    <button onclick="clearFilters()">Clear</button>
-  </div>
-
-  <table id="laporanTable">
+  <table id="tabel">
     <thead>
       <tr>
         <th>Tanggal</th>
-        <th>Uang Masuk</th>
-        <th>Uang Keluar</th>
         <th>Keterangan</th>
+        <th>Jumlah</th>
+        <th>Jenis</th>
+        <th>Aksi</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
-  <div class="total-container">
-    <strong>Total Uang Masuk: Rp <span id="totalUangMasuk">0</span></strong><br>
-    <strong>Total Uang Keluar: Rp <span id="totalUangKeluar">0</span></strong>
+  <!-- Modal Edit -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">Edit Transaksi</div>
+      <input type="date" id="modal-tanggal" />
+      <input type="text" id="modal-keterangan" placeholder="Keterangan" />
+      <input type="text" id="modal-jumlah" placeholder="Jumlah" />
+      <select id="modal-jenis">
+        <option value="Masuk">Uang Masuk</option>
+        <option value="Keluar">Uang Keluar</option>
+      </select>
+      <div class="modal-footer">
+        <button class="close-btn" onclick="closeModal()">Batal</button>
+        <button onclick="updateTransaction()">Update</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Rekap -->
+  <div id="rekap-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">Rekapitulasi Keuangan</div>
+      <p><strong>Total Masuk:</strong> <span id="rekap-masuk">Rp0</span></p>
+      <p><strong>Total Keluar:</strong> <span id="rekap-keluar">Rp0</span></p>
+      <p><strong>Total Kas:</strong> <span id="rekap-kas">Rp0</span></p>
+      <div class="modal-footer">
+        <button class="close-btn" onclick="closeRekapModal()">Tutup</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    let allTransaksi = []; // Untuk menyimpan data transaksi
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw_Ginq1mLM2xzdD2eryqrkxzlL5RUsk553OODE8cN3G9A9fQU-82bdErkqG0KDwWTuWg/exec';
 
-    // Fungsi untuk mengambil data transaksi dari Google Apps Script
-    function fetchTransaksi() {
-      const tanggalFilter = document.getElementById("filterTanggal").value;
+    document.getElementById("jumlah").addEventListener("input", function(e) {
+      let value = e.target.value.replace(/[^\d]/g, '');
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      e.target.value = value;
+    });
 
-      // Jika data belum diambil, ambil data dari Google Sheets
-      if (allTransaksi.length === 0) {
-        fetch('https://script.google.com/macros/s/AKfycbzW_ENAXCeoZ66ob0CRdyat9moeIgY6NoIyLoVV9AVmSh33C5ZZB-iaZSO1lLLtqaRk/exec?action=uangMasukKeluar')
-          .then(response => response.json())
-          .then(data => {
-            allTransaksi = data;
-            displayData(data, tanggalFilter);
-          })
-          .catch(error => console.error('Error fetching data:', error));
-      } else {
-        // Jika data sudah ada, langsung tampilkan dengan filter
-        displayData(allTransaksi, tanggalFilter);
+    async function submitData() {
+      const submitButton = document.getElementById("submitButton");
+      submitButton.disabled = true;
+
+      const tanggal = document.getElementById("tanggal").value;
+      const keterangan = document.getElementById("keterangan").value;
+      let jumlah = document.getElementById("jumlah").value.replace(/\./g, '');
+      const jenis = document.getElementById("jenis").value;
+
+      if (!tanggal || !keterangan || !jumlah) {
+        alert("Semua kolom harus diisi.");
+        submitButton.disabled = false;
+        return;
       }
+
+      try {
+        await fetch(`${scriptURL}?action=addTransaction&tanggal=${encodeURIComponent(tanggal)}&keterangan=${encodeURIComponent(keterangan)}&jumlah=${encodeURIComponent(jumlah)}&jenis=${encodeURIComponent(jenis)}`);
+        alert("Transaksi berhasil ditambahkan!");
+        document.getElementById("tanggal").value = "";
+        document.getElementById("keterangan").value = "";
+        document.getElementById("jumlah").value = "";
+        document.getElementById("jenis").value = "Masuk";
+        loadData();
+      } catch (error) {
+        alert("Terjadi kesalahan saat menambahkan transaksi.");
+      }
+
+      submitButton.disabled = false;
     }
 
-    // Fungsi untuk menampilkan data transaksi sesuai filter
-    function displayData(data, tanggalFilter) {
-      const tbody = document.querySelector("#laporanTable tbody");
+    async function loadData() {
+      const res = await fetch(`${scriptURL}?action=getData`);
+      const data = await res.json();
+
+      data.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+
+      const tbody = document.querySelector("#tabel tbody");
       tbody.innerHTML = "";
-      let totalUangMasuk = 0;
-      let totalUangKeluar = 0;
+      data.forEach((row, index) => {
+        const tr = document.createElement("tr");
 
-      data.forEach(row => {
-        const tanggal = formatDate(row[0]);
-        const uangMasuk = parseFloat(row[1]);
-        const uangKeluar = parseFloat(row[2]);
-        const keterangan = row[3];
+        row[0] = formatDate(row[0]);
+        row[2] = formatCurrency(row[2]);
 
-        // Filter berdasarkan Tanggal
-        if (
-          tanggalFilter === "" || tanggal === formatDate(tanggalFilter)
-        ) {
-          const tr = document.createElement("tr");
+        row.forEach((cell, i) => {
+          const td = document.createElement("td");
+          td.textContent = cell;
+          if (i === 3) td.style.color = cell === "Masuk" ? "green" : "red";
+          tr.appendChild(td);
+        });
 
-          // Format dan masukkan data ke dalam tabel
-          const formattedUangMasuk = formatCurrency(uangMasuk);
-          const formattedUangKeluar = formatCurrency(uangKeluar);
-          tr.innerHTML = `
-            <td>${tanggal}</td>
-            <td>${formattedUangMasuk}</td>
-            <td>${formattedUangKeluar}</td>
-            <td>${keterangan}</td>
-          `;
+        const tdActions = document.createElement("td");
+        tdActions.classList.add("action-btns");
 
-          tbody.appendChild(tr);
-          totalUangMasuk += uangMasuk;
-          totalUangKeluar += uangKeluar;
-        }
+        const editBtn = document.createElement("button");
+        editBtn.classList.add("edit-btn");
+        editBtn.innerHTML = '<img src="image/pen.png" alt="Edit">';
+        editBtn.onclick = () => openModal(index, row);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.innerHTML = '<img src="image/trash.png" alt="Hapus">';
+        deleteBtn.onclick = () => confirmDelete(index);
+
+        tdActions.appendChild(editBtn);
+        tdActions.appendChild(deleteBtn);
+        tr.appendChild(tdActions);
+
+        tbody.appendChild(tr);
       });
-
-      // Update total uang masuk dan keluar dengan format IDR
-      document.getElementById("totalUangMasuk").textContent = formatCurrency(totalUangMasuk);
-      document.getElementById("totalUangKeluar").textContent = formatCurrency(totalUangKeluar);
     }
 
-    // Fungsi untuk memformat tanggal menjadi dd-mm-yyyy
-    function formatDate(date) {
-      const d = new Date(date);
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
       return `${day}-${month}-${year}`;
     }
 
-    // Fungsi untuk memformat jumlah uang menjadi IDR
     function formatCurrency(amount) {
-      return `Rp ${amount.toLocaleString('id-ID')}`;
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
     }
 
-    // Fungsi untuk menghapus filter
-    function clearFilters() {
-      document.getElementById("filterTanggal").value = "";
-      displayData(allTransaksi, "");
+    async function deleteTransaction(index) {
+      await fetch(`${scriptURL}?action=deleteTransaction&id=${index}`);
+      loadData();
+      alert("Data berhasil dihapus.");
     }
 
-    // Fungsi untuk menangani form submission dan kirim data ke Google Sheets
-    document.getElementById("transaksiForm").addEventListener("submit", function (event) {
-      event.preventDefault();
+    function confirmDelete(index) {
+      if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+        deleteTransaction(index);
+      }
+    }
 
-      // Ambil nilai input dari form
-      const tanggal = document.getElementById("tanggal").value;
-      const uangMasuk = parseFloat(document.getElementById("uangMasuk").value);
-      const uangKeluar = parseFloat(document.getElementById("uangKeluar").value);
-      const keterangan = document.getElementById("keterangan").value;
+    function openModal(index, rowData) {
+      const tanggal = rowData[0].split('-').reverse().join('-');
+      document.getElementById("modal-tanggal").value = tanggal;
+      document.getElementById("modal-keterangan").value = rowData[1];
+      document.getElementById("modal-jumlah").value = rowData[2].replace(/[^\d]/g, '');
+      document.getElementById("modal-jenis").value = rowData[3];
+      document.getElementById("modal").style.display = "flex";
+      document.getElementById("modal").dataset.index = index;
+    }
 
-      // Kirim data ke Google Apps Script
-      fetch('https://script.google.com/macros/s/AKfycbzW_ENAXCeoZ66ob0CRdyat9moeIgY6NoIyLoVV9AVmSh33C5ZZB-iaZSO1lLLtqaRk/exec', {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'tambahLaporan',
-          tanggal: tanggal,
-          uangMasuk: uangMasuk,
-          uangKeluar: uangKeluar,
-          keterangan: keterangan
-        })
-      })
-      .then(response => response.text())
-      .then(data => {
-        alert("Data berhasil dikirim!");
-        fetchTransaksi(); // Ambil data terbaru
-        document.getElementById("transaksiForm").reset(); // Reset form input
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert("Terjadi kesalahan, coba lagi.");
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    async function updateTransaction() {
+      const index = document.getElementById("modal").dataset.index;
+      const tanggal = document.getElementById("modal-tanggal").value;
+      const keterangan = document.getElementById("modal-keterangan").value;
+      let jumlah = document.getElementById("modal-jumlah").value.replace(/\./g, '');
+      const jenis = document.getElementById("modal-jenis").value;
+
+      await fetch(`${scriptURL}?action=updateTransaction&id=${index}&tanggal=${encodeURIComponent(tanggal)}&keterangan=${encodeURIComponent(keterangan)}&jumlah=${encodeURIComponent(jumlah)}&jenis=${encodeURIComponent(jenis)}`);
+
+      alert("Data berhasil diubah.");
+      closeModal();
+      loadData();
+    }
+
+    function openRekapModal() {
+      const rows = document.querySelectorAll("#tabel tbody tr");
+      let totalMasuk = 0, totalKeluar = 0;
+
+      rows.forEach(row => {
+        const jumlahText = row.children[2].textContent.replace(/[^\d]/g, '');
+        const jumlah = parseInt(jumlahText) || 0;
+        const jenis = row.children[3].textContent;
+
+        if (jenis === "Masuk") totalMasuk += jumlah;
+        if (jenis === "Keluar") totalKeluar += jumlah;
       });
-    });
 
-    // Load data saat halaman dimuat
-    window.onload = fetchTransaksi;
+      document.getElementById("rekap-masuk").textContent = formatCurrency(totalMasuk);
+      document.getElementById("rekap-keluar").textContent = formatCurrency(totalKeluar);
+      document.getElementById("rekap-kas").textContent = formatCurrency(totalMasuk - totalKeluar);
+      document.getElementById("rekap-modal").style.display = "flex";
+    }
+
+    function closeRekapModal() {
+      document.getElementById("rekap-modal").style.display = "none";
+    }
+
+    loadData();
   </script>
 </body>
 </html>
