@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Laporan Keuangan</title>
   <style>
-    /* Global Reset dan Font */
+/* Reset dan Umum */
 body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #f4f6f9;
@@ -21,7 +21,7 @@ h2, h3 {
   margin-bottom: 20px;
 }
 
-/* Container Form Responsif */
+/* Container Form */
 .form-container {
   display: flex;
   flex-wrap: wrap;
@@ -33,34 +33,20 @@ h2, h3 {
   flex: 1 1 100%;
 }
 
-/* Responsif di layar besar */
-@media (min-width: 600px) {
-  .form-container > input,
-  .form-container > select {
-    flex: 1 1 calc(25% - 10px);
-  }
-
-  .form-container > button {
-    flex: 1 1 100%;
-    max-width: 200px;
-    align-self: flex-end;
-  }
-}
-
 /* Input dan Select */
 input, select {
-  padding: 10px;
-  font-size: 1em;
+  padding: 8px;
+  font-size: 0.9em;
   border: 1px solid #ccc;
   border-radius: 6px;
   box-sizing: border-box;
   width: 100%;
 }
 
-/* Tombol Submit */
+/* Tombol */
 button {
-  padding: 10px;
-  font-size: 1em;
+  padding: 8px;
+  font-size: 0.9em;
   background-color: #007BFF;
   color: white;
   border: none;
@@ -73,20 +59,43 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Tabel */
+/* Tombol Kembali */
+.back-button {
+  display: inline-block;
+  margin-bottom: 15px;
+  padding: 8px 12px;
+  background-color: #6c757d;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+}
+
+/* Tabel Responsif */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  font-size: 0.95em;
+  border-radius: 6px;
+  font-size: 0.85em;
+  min-width: 500px;
 }
 
 th, td {
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid #ddd;
   text-align: left;
+  white-space: nowrap;
 }
 
 th {
@@ -94,39 +103,37 @@ th {
   color: white;
 }
 
-/* Aksi Tombol Edit & Hapus */
+/* Tombol Aksi */
 .action-btns {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 6px;
 }
 
 .edit-btn, .delete-btn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 5px;
+  padding: 4px;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .edit-btn img, .delete-btn img {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
 
-/* Modal Styling */
+/* Modal */
 .modal {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
@@ -135,15 +142,15 @@ th {
 
 .modal-content {
   background-color: white;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 15px;
+  border-radius: 8px;
   width: 90%;
-  max-width: 400px;
+  max-width: 380px;
 }
 
 .modal-header {
-  font-size: 1.4em;
-  margin-bottom: 20px;
+  font-size: 1.2em;
+  margin-bottom: 15px;
   text-align: center;
 }
 
@@ -156,7 +163,7 @@ th {
   background-color: #dc3545;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
 }
@@ -165,21 +172,124 @@ th {
   background-color: #c82333;
 }
 
-.back-button {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 10px 15px;
-  background-color: #6c757d;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-size: 0.95em;
-  transition: background-color 0.3s ease;
+/* Media Queries */
+@media (min-width: 600px) {
+  .form-container > input,
+  .form-container > select {
+    flex: 1 1 calc(25% - 10px);
+  }
+
+  .form-container > button {
+    flex: 1 1 100%;
+    max-width: 200px;
+    align-self: flex-end;
+  }
+
+  table {
+    font-size: 0.9em;
+  }
+
+  th, td {
+    padding: 10px;
+  }
+}
+/* Tabel Responsif */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
 }
 
-.back-button:hover {
-  background-color: #5a6268;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 6px;
+  font-size: 0.72em; /* Ukuran font diperkecil */
+  min-width: 400px;
 }
+
+th, td {
+  padding: 4px 6px; /* Padding lebih sempit */
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  background: #007BFF;
+  color: white;
+  font-size: 0.75em;
+}
+
+/* Tombol Aksi */
+.action-btns {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.edit-btn, .delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-btn img, .delete-btn img {
+  width: 12px;
+  height: 12px;
+}
+
+/* Input & Button Ukuran Kecil */
+input, select {
+  padding: 6px;
+  font-size: 0.75em;
+  border-radius: 4px;
+}
+
+button {
+  padding: 6px;
+  font-size: 0.75em;
+  border-radius: 4px;
+}
+
+/* Modal Lebih Ramping */
+.modal-content {
+  padding: 12px;
+  width: 95%;
+  max-width: 340px;
+  font-size: 0.8em;
+}
+
+.modal-header {
+  font-size: 1em;
+}
+
+/* Kembali dan Modal Close */
+.back-button,
+.close-btn {
+  font-size: 0.75em;
+  padding: 5px 8px;
+  border-radius: 4px;
+}
+
+/* Media Queries (Sedikit lebih besar untuk tablet) */
+@media (min-width: 600px) {
+  table {
+    font-size: 0.8em;
+  }
+
+  th, td {
+    padding: 6px 8px;
+  }
+}
+
 
   </style>
 </head>
