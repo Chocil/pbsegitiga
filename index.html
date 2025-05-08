@@ -199,17 +199,92 @@
       filter: hue-rotate(0deg); /* Red */
     }
 
+    @media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  input, select {
+    font-size: 14px;
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  #search {
+    max-width: 100%;
+    font-size: 14px;
+  }
+
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+  }
+
+  td {
+    text-align: left;
+    padding: 8px;
+    border: none;
+    position: relative;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #4A90E2;
+  }
+
+  .aksi-td {
+    display: block !important;
+  }
+
+  .table-actions {
+    justify-content: start;
+  }
+
+  #modal, #loginModal {
+    width: 90%;
+    max-width: 90%;
+    padding: 20px;
+  }
+}
+
   </style>
 </head>
 <body>
 
-  <h1>Form Saldo Pemain</h1>
-  <button id="adminBtn" onclick="toggleLogin()">Login Admin</button>
-  <!-- Tombol Riwayat -->
-  <button onclick="window.location.href='laporan.html'">Riwayat</button>
-
+  <h1>PB SEGITIGA</h1>
+  
   <!-- Form Tambah Nama -->
-  <h3>Tambah Pemain Baru</h3>
+  <h3>Pencatatan Shutellkok</h3>
   <input id="namaBaru" placeholder="Nama Pemain Baru">
   <button onclick="tambahNamaBaru()">Tambah Nama Pemain</button>
 
@@ -228,7 +303,12 @@
   <div id="result" style="margin: 10px 0; font-weight: bold;"></div>
 
   <h2>Data Saldo Pemain</h2>
-  <input type="text" id="search" placeholder="Cari Nama Pemain..." oninput="filterData()">
+
+  <button id="adminBtn" onclick="toggleLogin()">Login Admin</button>
+  <!-- Tombol Riwayat -->
+  <button onclick="window.location.href='laporan.html'">Riwayat</button>
+
+  <!-- <input type="text" id="search" placeholder="Cari Nama Pemain..." oninput="filterData()"> -->
   <table>
     <thead>
       <tr>
@@ -238,7 +318,7 @@
       </tr>
     </thead>
     <tbody id="table-body">
-      <tr><td colspan="3">Memuat data...</td></tr>
+      <tr><td colspan="3">Sabara Cok...</td></tr>
     </tbody>
   </table>
 
@@ -384,12 +464,13 @@
         const [nama, pemakaian, pembayaran, saldo] = row;
         const tr = document.createElement("tr");
         let html = `
-          <td>${nama}</td>
-          <td>${formatRupiah(saldo)}</td>
+          <td data-label="Nama">${nama}</td>
+          <td data-label="Saldo">${formatRupiah(saldo)}</td>
         `;
+
         if (loggedIn) {
           html += `
-            <td class="aksi-td" style="display: table-cell">
+            <td class="aksi-td" data-label="Aksi" style="display: table-cell">
               <div class="table-actions">
                 <button onclick="hapusData('${nama}')">
                   <img src="image/trash.png">
