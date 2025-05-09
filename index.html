@@ -272,6 +272,49 @@ th:nth-child(2) {
   }
 }
 
+/* Popup Loading */
+#loadingModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+#loadingContent {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.spinner {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #4A90E2; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-gif {
+  width: 60px;
+  height: 60px;
+  margin-top: 10px;
+}
+
+
   </style>
 </head>
 <body>
@@ -289,11 +332,15 @@ th:nth-child(2) {
   <h3>Input Pemakaian Kok</h3>
   <label for="namaDropdown">Pilih Pemain:</label>
   <select id="namaDropdown">
-    <option value="">-- Pilih Pemain --</option>
+  <option value="">-- Pilih Pemain --</option>
   </select>
   <label>Jumlah Kok yang Dipakai</label>
   <input id="pemakaian" type="number" placeholder="Contoh: 5">
-  <button onclick="tambah()">Tambah</button>
+  <label>Kode Unik</label>
+  <input id="kodeUnik" type="text" placeholder="Masukkan kode unik">
+  <button id="tambahBtn" onclick="tambah()">Tambah</button>
+
+
 
   <div id="result" style="margin: 10px 0; font-weight: bold;"></div>
 
@@ -308,6 +355,12 @@ th:nth-child(2) {
         <th class="aksi-th">Aksi</th>
       </tr>
     </thead>
+
+    <div id="kodeUnikDisplay" style="display: none; margin-top: 20px; text-align: center; font-weight: bold; font-size: 18px; color: #4A90E2;">
+      Kode Unik Hari Ini: <span id="kodeUnikText">Memuat...</span>
+    </div>
+
+    
     <tbody id="table-body">
       <tr><td colspan="3">Sabara Cok...</td></tr>
     </tbody>
@@ -337,10 +390,77 @@ th:nth-child(2) {
     <button onclick="tutupModal()">Tutup</button>
   </div>
 
+  <!-- Popup Loading -->
+<div id="loadingModal" style="display: none;">
+  <div id="loadingContent">
+    <h3>Sabar Lagi</h3>
+    <img src="image/loading.gif" alt="Loading..." class="loading-gif" />
+  </div>
+</div>
+
+
+
   <script>
     const BASE_URL = "https://script.google.com/macros/s/AKfycbyGOXVLo_JyphHBIWkYjN0gJAWevvXJPpHbcHcN_UnHlAN1-DSeqXN7wdtchCioiid9Iw/exec";
     const hargaPerKok = 3000;
     let globalData = [];
+
+     // Fungsi untuk generate kode unik berdasarkan tanggal dan angka acak
+     function generateKodeUnik() {
+      const today = new Date();
+      const tanggal = today.toISOString().split('T')[0].replace(/-/g, '');  // Ambil tanggal dalam format YYYYMMDD
+      const randomNum = Math.floor(Math.random() * 1000);  // Generate angka acak 3 digit
+      const kodeUnik = `PB-${tanggal}-${randomNum.toString().padStart(3, '0')}`;  // Format kode unik
+      return kodeUnik;
+    }
+
+    // Fungsi untuk menyimpan kode unik di localStorage jika sudah ganti hari
+    function updateKodeUnik() {
+      const lastUpdate = localStorage.getItem("lastUpdate");
+      const today = new Date().toISOString().split('T')[0]; // Tanggal hari ini
+
+      if (lastUpdate !== today) {
+        const newKodeUnik = generateKodeUnik();
+        localStorage.setItem("kodeUnik", newKodeUnik);
+        localStorage.setItem("lastUpdate", today);  // Simpan tanggal terakhir pembaruan
+      }
+    }
+
+
+     // Fungsi untuk menampilkan kode unik
+  function tampilkanKodeUnik() {
+    if (isLoggedIn()) {
+      const kodeUnik = localStorage.getItem("kodeUnik");
+      document.getElementById("kodeUnikText").textContent = kodeUnik;
+      document.getElementById("kodeUnikDisplay").style.display = "block";
+    } else {
+      document.getElementById("kodeUnikDisplay").style.display = "none";
+    }
+  }
+
+
+     // Menjalankan kode saat halaman dimuat
+     window.onload = function() {
+      updateKodeUnik();         // <-- Tambahkan ini
+      tampilkanKodeUnik();      // Tetap tampilkan
+      loadData();
+    };
+
+
+
+
+
+    // Fungsi untuk menonaktifkan tombol
+    function disableButton(button) {
+      button.disabled = true;
+      button.style.cursor = 'not-allowed';
+    }
+
+    // Fungsi untuk mengaktifkan tombol
+    function enableButton(button) {
+      button.disabled = false;
+      button.style.cursor = 'pointer';
+    }
 
     function isLoggedIn() {
       return sessionStorage.getItem("loggedIn") === "true";
@@ -351,6 +471,7 @@ th:nth-child(2) {
         sessionStorage.removeItem("loggedIn");
         document.getElementById("adminBtn").textContent = "Login Admin";
         loadData();
+        tampilkanKodeUnik(); // tambahkan ini saat logout
       } else {
         document.getElementById("loginModal").style.display = "block";
         document.getElementById("overlay").style.display = "block";
@@ -364,6 +485,7 @@ th:nth-child(2) {
         document.getElementById("adminBtn").textContent = "Logout";
         tutupModal();
         loadData();
+        tampilkanKodeUnik(); // tambahkan ini saat login berhasil
       } else {
         alert("Password salah!");
       }
@@ -376,31 +498,95 @@ th:nth-child(2) {
     }
 
     function tambahNamaBaru() {
-      const nama = document.getElementById("namaBaru").value.trim();
-      if (!nama) return alert("Nama tidak boleh kosong!");
-      const sudahAda = globalData.slice(1).some(row => row[0].toLowerCase() === nama.toLowerCase());
-      if (sudahAda) return alert("Nama sudah terdaftar!");
-      const data = { nama, pemakaian: 0, pembayaran: 0, saldo: 0 };
-      fetch(`${BASE_URL}?action=tambah`, {
-        method: "POST", body: JSON.stringify(data)
-      }).then(r => r.text()).then(msg => {
-        alert(msg); document.getElementById("namaBaru").value = ""; loadData();
-      });
-    }
+  const namaBaruInput = document.getElementById("namaBaru");
+  const button = document.querySelector("button[onclick='tambahNamaBaru()']");
+  disableButton(button); // Menonaktifkan tombol selama proses
 
-    function tambah() {
-      const nama = document.getElementById("namaDropdown").value;
-      const pemakaian = parseFloat(document.getElementById("pemakaian").value);
-      if (!nama || pemakaian <= 0) return alert("Pilih nama dan isi jumlah kok!");
-      const data = { nama, pemakaian, pembayaran: 0 };
-      fetch(`${BASE_URL}?action=tambah`, {
-        method: "POST", body: JSON.stringify(data)
-      }).then(r => r.text()).then(msg => {
-        document.getElementById("result").textContent = msg;
-        document.getElementById("pemakaian").value = "";
-        loadData();
-      });
-    }
+  const nama = namaBaruInput.value.trim();
+  if (!nama) {
+    alert("Nama tidak boleh kosong!");
+    enableButton(button); // Mengaktifkan tombol kembali
+    return;
+  }
+
+  const sudahAda = globalData.slice(1).some(row => row[0].toLowerCase() === nama.toLowerCase());
+  if (sudahAda) {
+    alert("Nama sudah terdaftar!");
+    enableButton(button); // Mengaktifkan tombol kembali
+    return;
+  }
+
+  const data = { nama, pemakaian: 0, pembayaran: 0, saldo: 0 };
+  fetch(`${BASE_URL}?action=tambah`, {
+    method: "POST", body: JSON.stringify(data)
+  }).then(r => r.text()).then(msg => {
+    alert(msg);
+    namaBaruInput.value = "";
+    loadData();
+    enableButton(button); // Mengaktifkan tombol kembali
+  });
+}
+
+function tambah() {
+  const tambahBtn = document.getElementById("tambahBtn");
+  const loadingModal = document.getElementById("loadingModal");
+
+  tambahBtn.disabled = true; // Cegah double klik
+  loadingModal.style.display = "flex"; // Tampilkan popup loading
+  
+  const nama = document.getElementById("namaDropdown").value;
+  const pemakaian = parseFloat(document.getElementById("pemakaian").value);
+  const kodeInput = document.getElementById("kodeUnik").value.trim();
+  const kodeUnikAsli = localStorage.getItem("kodeUnik");
+
+  // Validasi input
+  if (!nama || pemakaian <= 0) {
+    alert("Pilih nama dan isi jumlah kok!");
+    tambahBtn.disabled = false;
+    loadingModal.style.display = "none"; // Sembunyikan loading
+    return;
+  }
+  if (kodeInput.length !== 3 || isNaN(kodeInput)) {
+    alert("Masukkan 3 digit angka kode unik!");
+    tambahBtn.disabled = false;
+    loadingModal.style.display = "none"; // Sembunyikan loading
+    return;
+  }
+
+  const tigaDigit = kodeUnikAsli.slice(-3);  // Ambil 3 digit terakhir dari kode unik di localStorage
+  if (kodeInput !== tigaDigit) {
+    alert("Kode unik salah! Transaksi gagal.");
+    tambahBtn.disabled = false;
+    loadingModal.style.display = "none"; // Sembunyikan loading
+    return;
+  }
+
+  // Jika validasi benar, kirim data
+  const data = { nama, pemakaian, pembayaran: 0 };
+
+  fetch(`${BASE_URL}?action=tambah`, {
+    method: "POST", 
+    body: JSON.stringify(data),
+  })
+  .then(r => r.text())
+  .then(msg => {
+    document.getElementById("result").textContent = msg;
+    document.getElementById("pemakaian").value = "";
+    document.getElementById("kodeUnik").value = "";
+    loadData(); // refresh data
+    tambahBtn.disabled = false; // Aktifkan kembali tombol setelah berhasil
+    loadingModal.style.display = "none"; // Sembunyikan loading
+  })
+  .catch(err => {
+    console.error("Terjadi kesalahan:", err);
+    alert("Terjadi kesalahan saat menambah data.");
+    tambahBtn.disabled = false; // Aktifkan kembali tombol jika gagal
+    loadingModal.style.display = "none"; // Sembunyikan loading
+  });
+}
+
+
+
 
     function bukaBayar(nama) {
       document.getElementById("bayar-nama").value = nama;
@@ -411,15 +597,27 @@ th:nth-child(2) {
     }
 
     function submitBayar() {
-      const nama = document.getElementById("bayar-nama").value;
-      const pembayaran = parseFloat(document.getElementById("bayar-jumlah").value);
-      if (pembayaran <= 0) return alert("Masukkan jumlah yang valid!");
-      fetch(`${BASE_URL}?action=bayar`, {
-        method: "POST", body: JSON.stringify({ nama, pembayaran })
-      }).then(r => r.text()).then(msg => {
-        alert(msg); tutupModal(); loadData();
-      });
-    }
+  const bayarButton = document.querySelector("#modal button[onclick='submitBayar()']");
+  disableButton(bayarButton); // Menonaktifkan tombol selama proses
+
+  const nama = document.getElementById("bayar-nama").value;
+  const pembayaran = parseFloat(document.getElementById("bayar-jumlah").value);
+
+  if (pembayaran <= 0) {
+    alert("Masukkan jumlah yang valid!");
+    enableButton(bayarButton); // Mengaktifkan tombol kembali
+    return;
+  }
+
+  fetch(`${BASE_URL}?action=bayar`, {
+    method: "POST", body: JSON.stringify({ nama, pembayaran })
+  }).then(r => r.text()).then(msg => {
+    alert(msg);
+    tutupModal();
+    loadData();
+    enableButton(bayarButton); // Mengaktifkan tombol kembali
+  });
+}
 
     function hapusData(nama) {
       if (!confirm(`Yakin hapus data ${nama}?`)) return;
@@ -497,6 +695,7 @@ th:nth-child(2) {
       });
     }
 
+    // Load data untuk ditampilkan
     function loadData() {
       fetch(`${BASE_URL}?action=getSaldoPemain`)
         .then(r => r.json())
