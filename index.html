@@ -498,92 +498,92 @@ th:nth-child(2) {
     }
 
     function tambahNamaBaru() {
-  const namaBaruInput = document.getElementById("namaBaru");
-  const button = document.querySelector("button[onclick='tambahNamaBaru()']");
-  disableButton(button); // Menonaktifkan tombol selama proses
+      const namaBaruInput = document.getElementById("namaBaru");
+      const button = document.querySelector("button[onclick='tambahNamaBaru()']");
+      disableButton(button); // Menonaktifkan tombol selama proses
 
-  const nama = namaBaruInput.value.trim();
-  if (!nama) {
-    alert("Nama tidak boleh kosong!");
-    enableButton(button); // Mengaktifkan tombol kembali
-    return;
-  }
+      const nama = namaBaruInput.value.trim();
+      if (!nama) {
+        alert("Nama tidak boleh kosong!");
+        enableButton(button); // Mengaktifkan tombol kembali
+        return;
+      }
 
-  const sudahAda = globalData.slice(1).some(row => row[0].toLowerCase() === nama.toLowerCase());
-  if (sudahAda) {
-    alert("Nama sudah terdaftar!");
-    enableButton(button); // Mengaktifkan tombol kembali
-    return;
-  }
+      const sudahAda = globalData.slice(1).some(row => row[0].toLowerCase() === nama.toLowerCase());
+      if (sudahAda) {
+        alert("Nama sudah terdaftar!");
+        enableButton(button); // Mengaktifkan tombol kembali
+        return;
+      }
 
-  const data = { nama, pemakaian: 0, pembayaran: 0, saldo: 0 };
-  fetch(`${BASE_URL}?action=tambah`, {
-    method: "POST", body: JSON.stringify(data)
-  }).then(r => r.text()).then(msg => {
-    alert(msg);
-    namaBaruInput.value = "";
-    loadData();
-    enableButton(button); // Mengaktifkan tombol kembali
-  });
-}
+      const data = { nama, pemakaian: 0, pembayaran: 0, saldo: 0 };
+      fetch(`${BASE_URL}?action=tambah`, {
+        method: "POST", body: JSON.stringify(data)
+      }).then(r => r.text()).then(msg => {
+        alert(msg);
+        namaBaruInput.value = "";
+        loadData();
+        enableButton(button); // Mengaktifkan tombol kembali
+      });
+    }
 
-function tambah() {
-  const tambahBtn = document.getElementById("tambahBtn");
-  const loadingModal = document.getElementById("loadingModal");
+  function tambah() {
+      const tambahBtn = document.getElementById("tambahBtn");
+      const loadingModal = document.getElementById("loadingModal");
 
-  tambahBtn.disabled = true; // Cegah double klik
-  loadingModal.style.display = "flex"; // Tampilkan popup loading
-  
-  const nama = document.getElementById("namaDropdown").value;
-  const pemakaian = parseFloat(document.getElementById("pemakaian").value);
-  const kodeInput = document.getElementById("kodeUnik").value.trim();
-  const kodeUnikAsli = localStorage.getItem("kodeUnik");
+      tambahBtn.disabled = true; // Cegah double klik
+      loadingModal.style.display = "flex"; // Tampilkan popup loading
+      
+      const nama = document.getElementById("namaDropdown").value;
+      const pemakaian = parseFloat(document.getElementById("pemakaian").value);
+      const kodeInput = document.getElementById("kodeUnik").value.trim();
+      const kodeUnikAsli = localStorage.getItem("kodeUnik");
 
-  // Validasi input
-  if (!nama || pemakaian <= 0) {
-    alert("Pilih nama dan isi jumlah kok!");
-    tambahBtn.disabled = false;
-    loadingModal.style.display = "none"; // Sembunyikan loading
-    return;
-  }
-  if (kodeInput.length !== 3 || isNaN(kodeInput)) {
-    alert("Masukkan 3 digit angka kode unik!");
-    tambahBtn.disabled = false;
-    loadingModal.style.display = "none"; // Sembunyikan loading
-    return;
-  }
+      // Validasi input
+      if (!nama || pemakaian <= 0) {
+        alert("Pilih nama dan isi jumlah kok!");
+        tambahBtn.disabled = false;
+        loadingModal.style.display = "none"; // Sembunyikan loading
+        return;
+      }
+      if (kodeInput.length !== 3 || isNaN(kodeInput)) {
+        alert("Masukkan 3 digit angka kode unik!");
+        tambahBtn.disabled = false;
+        loadingModal.style.display = "none"; // Sembunyikan loading
+        return;
+      }
 
-  const tigaDigit = kodeUnikAsli.slice(-3);  // Ambil 3 digit terakhir dari kode unik di localStorage
-  if (kodeInput !== tigaDigit) {
-    alert("Kode unik salah! Transaksi gagal.");
-    tambahBtn.disabled = false;
-    loadingModal.style.display = "none"; // Sembunyikan loading
-    return;
-  }
+      const tigaDigit = kodeUnikAsli.slice(-3);  // Ambil 3 digit terakhir dari kode unik di localStorage
+      if (kodeInput !== tigaDigit) {
+        alert("Kode unik salah! Transaksi gagal.");
+        tambahBtn.disabled = false;
+        loadingModal.style.display = "none"; // Sembunyikan loading
+        return;
+      }
 
-  // Jika validasi benar, kirim data
-  const data = { nama, pemakaian, pembayaran: 0 };
+      // Jika validasi benar, kirim data
+      const data = { nama, pemakaian, pembayaran: 0 };
 
-  fetch(`${BASE_URL}?action=tambah`, {
-    method: "POST", 
-    body: JSON.stringify(data),
-  })
-  .then(r => r.text())
-  .then(msg => {
-    document.getElementById("result").textContent = msg;
-    document.getElementById("pemakaian").value = "";
-    document.getElementById("kodeUnik").value = "";
-    loadData(); // refresh data
-    tambahBtn.disabled = false; // Aktifkan kembali tombol setelah berhasil
-    loadingModal.style.display = "none"; // Sembunyikan loading
-  })
-  .catch(err => {
-    console.error("Terjadi kesalahan:", err);
-    alert("Terjadi kesalahan saat menambah data.");
-    tambahBtn.disabled = false; // Aktifkan kembali tombol jika gagal
-    loadingModal.style.display = "none"; // Sembunyikan loading
-  });
-}
+      fetch(`${BASE_URL}?action=tambah`, {
+        method: "POST", 
+        body: JSON.stringify(data),
+      })
+      .then(r => r.text())
+      .then(msg => {
+        document.getElementById("result").textContent = msg;
+        document.getElementById("pemakaian").value = "";
+        document.getElementById("kodeUnik").value = "";
+        loadData(); // refresh data
+        tambahBtn.disabled = false; // Aktifkan kembali tombol setelah berhasil
+        loadingModal.style.display = "none"; // Sembunyikan loading
+      })
+      .catch(err => {
+        console.error("Terjadi kesalahan:", err);
+        alert("Terjadi kesalahan saat menambah data.");
+        tambahBtn.disabled = false; // Aktifkan kembali tombol jika gagal
+        loadingModal.style.display = "none"; // Sembunyikan loading
+      });
+    }
 
 
 
