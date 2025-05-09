@@ -373,7 +373,7 @@ tbody tr:hover {
   <div class="form-container">
     <input type="date" id="tanggal" required>
     <input type="text" id="keterangan" placeholder="Keterangan" required>
-    <input type="number" id="jumlah" placeholder="Jumlah" required>
+    <input type="text" id="jumlah" placeholder="Jumlah" required>
     <select id="jenis" required>
       <option value="masuk">Uang Masuk</option>
       <option value="keluar">Uang Keluar</option>
@@ -406,7 +406,7 @@ tbody tr:hover {
       <h3>Edit Transaksi</h3>
       <input type="date" id="edit-tanggal" required>
       <input type="text" id="edit-keterangan" placeholder="Keterangan" required>
-      <input type="number" id="edit-jumlah" placeholder="Jumlah" required>
+      <input type="text" id="edit-jumlah" placeholder="Jumlah" required>
       <select id="edit-jenis" required>
         <option value="masuk">Uang Masuk</option>
         <option value="keluar">Uang Keluar</option>
@@ -521,7 +521,7 @@ tbody tr:hover {
   disableAllButtons();
   const tanggal = document.getElementById('tanggal').value;
   const keterangan = document.getElementById('keterangan').value;
-  const jumlah = document.getElementById('jumlah').value;
+  const jumlah = cleanFormattedNumber(document.getElementById('jumlah').value);
   const jenis = document.getElementById('jenis').value;
 
   try {
@@ -563,7 +563,7 @@ tbody tr:hover {
 
   const tanggal = document.getElementById('edit-tanggal').value;
   const keterangan = document.getElementById('edit-keterangan').value;
-  const jumlah = document.getElementById('edit-jumlah').value;
+  const jumlah = cleanFormattedNumber(document.getElementById('edit-jumlah').value);
   const jenis = document.getElementById('edit-jenis').value;
 
   try {
@@ -631,7 +631,46 @@ tbody tr:hover {
     }
 
     window.onload = getData;
+
+    function formatNumberInput(input) {
+  let value = input.value.replace(/\./g, '').replace(/\D/g, ''); // Hapus titik dan karakter non-digit
+  if (!value) {
+    input.value = '';
+    return;
+  }
+  input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Tambah titik setiap 3 angka
+}
+
+// Event listener untuk input jumlah
+document.getElementById('jumlah').addEventListener('input', function () {
+  formatNumberInput(this);
+});
+
+// Saat mengirim data, hapus titik agar nilai benar
+function cleanFormattedNumber(str) {
+  return str.replace(/\./g, '');
+}
+
   </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const inputEditJumlah = document.getElementById("edit-jumlah");
+  
+      inputEditJumlah.addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\./g, '').replace(/\D/g, '');
+        if (value) {
+          e.target.value = formatNumberWithDots(value);
+        } else {
+          e.target.value = '';
+        }
+      });
+  
+      function formatNumberWithDots(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
+    });
+  </script>
+  
 </body>
 </html>
