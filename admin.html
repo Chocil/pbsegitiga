@@ -321,6 +321,46 @@ tbody tr:hover {
   }
 }
 
+#loadingModal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Pastikan modal tampil di atas elemen lainnya */
+  width: auto;
+  height: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+#loadingContent {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-width: 300px;
+  margin: auto;
+}
+
+
+#loadingContent h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.loading-gif {
+  width: 50px; /* Ukuran gif yang lebih kecil untuk kesan ringan */
+  height: auto;
+  margin-top: 10px;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
 
   </style>
   
@@ -386,6 +426,16 @@ tbody tr:hover {
     </div>
   </div>
 
+ <!-- Popup Loading -->
+<div id="loadingModal" style="display: none;">
+    <div id="loadingContent">
+      <h3>Sabar Lagi</h3>
+      <img src="image/loading.gif" alt="Loading..." class="loading-gif" />
+    </div>
+  </div>
+
+
+  
   <script>
     const sheetUrl = 'https://script.google.com/macros/s/AKfycbyRsN7XZr-PH94UcuAU10hUw8XYFkmA83eUYzTKiSJgbCbnLo3L0NI6HCtbW6qGq3rK-A/exec'; // Ganti dengan URL Apps Script Anda
     let selectedKode = null;
@@ -467,32 +517,35 @@ tbody tr:hover {
     }
 
     async function tambahTransaksi() {
-    disableAllButtons();
-    const tanggal = document.getElementById('tanggal').value;
-    const keterangan = document.getElementById('keterangan').value;
-    const jumlah = document.getElementById('jumlah').value;
-    const jenis = document.getElementById('jenis').value;
+  showLoading();
+  disableAllButtons();
+  const tanggal = document.getElementById('tanggal').value;
+  const keterangan = document.getElementById('keterangan').value;
+  const jumlah = document.getElementById('jumlah').value;
+  const jenis = document.getElementById('jenis').value;
 
-    try {
-        const response = await fetch(`${sheetUrl}?action=addTransaction&tanggal=${tanggal}&keterangan=${keterangan}&jumlah=${jumlah}&jenis=${jenis}`);
-        const result = await response.json();
+  try {
+    const response = await fetch(`${sheetUrl}?action=addTransaction&tanggal=${tanggal}&keterangan=${keterangan}&jumlah=${jumlah}&jenis=${jenis}`);
+    const result = await response.json();
 
-        if (result.success) {
-        alert('Transaksi berhasil ditambahkan!');
-        getData();
-        document.getElementById('tanggal').value = '';
-        document.getElementById('keterangan').value = '';
-        document.getElementById('jumlah').value = '';
-        document.getElementById('jenis').value = 'masuk';
-        } else {
-        alert('Gagal menambahkan transaksi.');
-        }
-    } catch (error) {
-        alert('Terjadi kesalahan. Coba lagi nanti.');
-    } finally {
-        enableAllButtons();
+    if (result.success) {
+      alert('Transaksi berhasil ditambahkan!');
+      getData();
+      document.getElementById('tanggal').value = '';
+      document.getElementById('keterangan').value = '';
+      document.getElementById('jumlah').value = '';
+      document.getElementById('jenis').value = 'masuk';
+    } else {
+      alert('Gagal menambahkan transaksi.');
     }
-    }
+  } catch (error) {
+    alert('Terjadi kesalahan. Coba lagi nanti.');
+  } finally {
+    hideLoading();
+    enableAllButtons();
+  }
+}
+
 
 
     function editTransaksi(kode, tanggal, keterangan, jumlah, jenis) {
@@ -505,7 +558,9 @@ tbody tr:hover {
     }
 
     async function simpanEdit() {
+  showLoading();
   disableAllButtons();
+
   const tanggal = document.getElementById('edit-tanggal').value;
   const keterangan = document.getElementById('edit-keterangan').value;
   const jumlah = document.getElementById('edit-jumlah').value;
@@ -518,16 +573,18 @@ tbody tr:hover {
     if (result.success) {
       alert('Transaksi berhasil diperbarui!');
       getData();
-      closeModal();
+      closeModal(); // pastikan fungsi ini ada
     } else {
       alert('Gagal memperbarui transaksi.');
     }
   } catch (error) {
     alert('Terjadi kesalahan. Coba lagi nanti.');
   } finally {
+    hideLoading();
     enableAllButtons();
   }
 }
+
 
 
     function closeModal() {
@@ -555,6 +612,14 @@ tbody tr:hover {
     enableAllButtons();
   }
 }
+
+    function showLoading() {
+    document.getElementById('loadingModal').style.display = 'block';
+    }
+
+    function hideLoading() {
+    document.getElementById('loadingModal').style.display = 'none';
+    }
 
 
     function showRekapanKas() {
