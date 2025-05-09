@@ -597,27 +597,42 @@ function tambah() {
     }
 
     function submitBayar() {
-  const bayarButton = document.querySelector("#modal button[onclick='submitBayar()']");
-  disableButton(bayarButton); // Menonaktifkan tombol selama proses
-
   const nama = document.getElementById("bayar-nama").value;
-  const pembayaran = parseFloat(document.getElementById("bayar-jumlah").value);
+  const jumlah = parseFloat(document.getElementById("bayar-jumlah").value);
+  const kodeUnik = localStorage.getItem("kodeUnik");
 
-  if (pembayaran <= 0) {
-    alert("Masukkan jumlah yang valid!");
-    enableButton(bayarButton); // Mengaktifkan tombol kembali
+  if (!jumlah || jumlah <= 0) {
+    alert("Jumlah pembayaran harus lebih dari 0");
     return;
   }
 
+  // Tampilkan loading
+  document.getElementById("loadingModal").style.display = "flex";
+
+  const data = {
+    nama,
+    pemakaian: 0,
+    pembayaran: jumlah,
+    saldo: jumlah,
+    kode: kodeUnik
+  };
+
   fetch(`${BASE_URL}?action=bayar`, {
-    method: "POST", body: JSON.stringify({ nama, pembayaran })
-  }).then(r => r.text()).then(msg => {
-    alert(msg);
-    tutupModal();
-    loadData();
-    enableButton(bayarButton); // Mengaktifkan tombol kembali
-  });
+    method: "POST",
+    body: JSON.stringify(data)
+  }).then(res => res.text())
+    .then(msg => {
+      alert(msg);
+      document.getElementById("bayar-jumlah").value = "";
+      tutupModal();
+      loadData();
+    })
+    .finally(() => {
+      // Sembunyikan loading meskipun ada error
+      document.getElementById("loadingModal").style.display = "none";
+    });
 }
+
 
     function hapusData(nama) {
       if (!confirm(`Yakin hapus data ${nama}?`)) return;
