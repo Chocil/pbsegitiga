@@ -3,179 +3,392 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laporan Keuangan - Riwayat Pembayaran</title>
+
+  <title>Saldo Pemain</title>
   <style>
-/* Global */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 20px;
-  background-color: #f4f6f8;
-  color: #333;
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+      background-color: #f4f7fc;
+      max-width: 900px;
+      margin: auto;
+      color: #333;
+    }
+
+    h1, h2, h3 {
+      color: #13007c;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      margin-top: 20px;
+      font-size: 24px;
+    }
+
+    button {
+      background-color: #13007c;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+      max-width: 200px;
+      display: inline-block;
+      text-align: center;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    button:hover {
+      background-color: #357ABD;
+    }
+
+    input, select {
+      padding: 12px;
+      margin: 8px 0;
+      width: 100%;
+      max-width: 400px;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 20px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #13007c;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f5faff;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #e0f2ff;
+    }
+
+    tr:hover {
+      background-color: #c3e4ff;
+      cursor: pointer;
+    }
+
+    .aksi-th {
+      display: none;
+    }
+
+    #search {
+      padding: 12px;
+      margin: 10px 0;
+      width: 100%;
+      max-width: 300px;
+      display: inline-block;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: none;
+    }
+
+    #modal, #loginModal {
+  position: fixed;
+  z-index: 1000;
+  background: #fff;
+  padding: 30px;
+  border: 1px solid #ccc;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Pusatkan modal di tengah layar */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  display: none;
+  width: 400px;
+  border-radius: 8px;
+  text-align: center; /* Pusatkan teks dan konten dalam modal */
 }
 
-h1 {
-  font-size: 22px;
+#overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+#modal h3, #loginModal h3 {
   margin-bottom: 20px;
   color: #13007c;
 }
 
-/* Loader */
-#loader {
-  display: none;
-  text-align: center;
-  margin: 20px 0;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-/* Kontainer atas: filter dan tombol sejajar */
-.top-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.filter-container select,
-.filter-container input[type="date"] {
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #fff;
-}
-
-.button-container {
-  display: flex;
-  gap: 10px;
-}
-
-.button-container button {
-  padding: 8px 16px;
-  font-size: 14px;
-  background-color: #13007c;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-}
-
-.button-container button:hover {
-  background-color: #2e2179;
-  transform: scale(1.02);
-}
-
-/* Tabel */
-table {
+#modal input, #loginModal input {
   width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-align: center; /* Pusatkan teks dalam input */
 }
 
-th, td {
-  padding: 12px 16px;
-  text-align: left;
-  font-size: 14px;
-}
-
-th {
-  background-color: #e9eef3;
-  color: #444;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 13px;
-}
-
-td:nth-child(3) {
-  text-align: left;
-  font-weight: 500;
-}
-
-tbody tr:nth-child(odd) {
-  background-color: #fdfdfd;
-}
-
-tbody tr:nth-child(even) {
-  background-color: #f3f8fc;
-}
-
-tbody tr:hover {
-  background-color: #e3f1fa !important;
-  transition: background-color 0.2s;
-}
-
-/* Total */
-.total-container {
-  margin-top: 24px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #222;
-}
-
-/* Pagination */
-.pagination {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.pagination button {
-  padding: 8px 16px;
-  font-size: 14px;
-  margin: 0 5px;
+#modal button, #loginModal button {
+  width: 100%;
+  padding: 12px;
   background-color: #13007c;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  margin-top: 10px;
+  transition: background-color 0.3s;
 }
 
-.pagination button:hover {
-  background-color: #302477;
-  transform: scale(1.02);
+#modal button:hover, #loginModal button:hover {
+  background-color: #357ABD;
 }
 
-.pagination button:disabled {
-  background-color: #bdc3c7;
-  cursor: not-allowed;
-}
 
-.pagination .page-number {
-  display: inline-block;
-  padding: 8px 12px;
-  font-size: 14px;
-  background-color: #ecf0f1;
-  border-radius: 6px;
-  margin: 0 10px;
-  color: #34495e;
-}
+    .aksi-td {
+      display: none;
+    }
 
-/* Responsif */
-@media (max-width: 600px) {
-  th, td {
-    font-size: 12px;
+    .table-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .table-actions button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .table-actions img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .table-actions .bayar {
+      filter: hue-rotate(120deg); /* Green */
+    }
+
+    .table-actions .hapus {
+      filter: hue-rotate(0deg); /* Red */
+    }
+
+    @media (max-width: 600px) {
+  body {
     padding: 10px;
   }
 
   h1 {
+    font-size: 24px;
+  }
+
+  h3 {
     font-size: 18px;
   }
 
-  .button-container button {
-    padding: 6px 12px;
-    font-size: 12px;
+  button {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+    max-width: 100%;
   }
 
-  .pagination button, .pagination .page-number {
-    font-size: 12px;
+  input, select {
+    font-size: 14px;
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  #search {
+    max-width: 100%;
+    font-size: 14px;
+  }
+
+  table, thead, tbody, th, td, tr {
+    width: 100%;
+  }
+
+  tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+  }
+
+  td {
+    text-align: left;
+    padding: 8px;
+    border: none;
+    position: relative;
+  }
+
+  td[data-label="Nama"],
+th:nth-child(1) {
+  width: 40%; /* atau bisa 25% */
+}
+
+td[data-label="Saldo"],
+th:nth-child(2) {
+  width: 60%; /* sisanya */
+}
+
+  .table-actions {
+    justify-content: start;
+  }
+
+  /* Modifikasi untuk modal login */
+  #loginModal {
+    position: fixed;
+    z-index: 1000;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Pusatkan modal di tengah layar */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    width: 300px; /* Ukuran lebih kecil */
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  #loginModal h3 {
+    margin-bottom: 15px; /* Mengurangi jarak antara judul dan input */
+    color: #13007c;
+    font-size: 18px; /* Ukuran teks judul lebih kecil */
+  }
+
+  #loginModal input {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px; /* Lebih kecil */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px; /* Ukuran font input lebih kecil */
+  }
+
+  #loginModal button {
+    width: 100%;
+    padding: 10px;
+    background-color: #13007c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    font-size: 14px; /* Ukuran font lebih kecil */
+  }
+
+  #loginModal button:hover {
+    background-color: #2b1b81;
+  }
+
+  /* Mengubah tombol 'Tutup' agar terlihat lebih kecil */
+  #loginModal button:nth-of-type(2) {
+    background-color: #a81010;
   }
 }
+
+/* Popup Loading */
+#loadingModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+#loadingContent {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.spinner {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #13007c; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-gif {
+  width: 60px;
+  height: 60px;
+  margin-top: 10px;
+}
+
+#modal, #loginModal {
+  width: 350px;  /* Sesuaikan lebar modal */
+}
+
+#modal input, #loginModal input {
+  width: 100%;
+  max-width: 300px;  /* Mengatur max-width untuk input */
+  margin-top: 10px;
+  padding: 10px;
+}
+
+#modal button, #loginModal button {
+  width: 100%;
+  padding: 12px;
+  background-color: #13007c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  font-size: 16px;
+  max-width: 300px;  /* Atur max-width untuk tombol */
+}
+
+
   </style>
 </head>
 <body>
@@ -185,185 +398,415 @@ tbody tr:hover {
     <div style="display: flex; align-items: center; gap: 10px;">
       <img src="image/logo.png" alt="Logo PB Segitiga Kiri" style="height: 110px;">
       <div>
-        <p style="margin-top: 0; font-size: 24px; font-weight: bold; color:#13007c">PB SEGITIGA</p>
+        <p style="margin: 0; font-size: 14px; font-weight: bold; color:#13007c">Pencatatan Shutelkok</p>
+        <p style="margin-top: 0; font-size: 30px; font-weight: bold; color:#13007c">PB SEGITIGA</p>
       </div>
     </div>
     
     <!-- Logo Kanan -->
     <img src="image/icon1.gif" alt="Logo Kanan" style="height: 110px;">
   </div>
+  
+  <!-- Form Tambah Nama -->
+  <input id="namaBaru" placeholder="Nama Pemain Baru">
+  <button onclick="tambahNamaBaru()">Tambah Nama Pemain</button>
 
-  <h1>Riwayat Pembayaran</h1>
+  <hr>
 
-  <!-- Loader -->
-  <div id="loader">Sabar Cok...</div>
+  <!-- Form Pemakaian Kok -->
+  <h3>Input Pemakaian Kok</h3>
+  <label for="namaDropdown">Pilih Pemain:</label>
+  <select id="namaDropdown">
+  <option value="">-- Pilih Pemain --</option>
+  </select>
+  <label>Jumlah Kok yang Dipakai</label>
+  <input id="pemakaian" type="number" placeholder="Contoh: 5">
+  <label>Kode Unik</label>
+  <input id="kodeUnik" type="text" placeholder="Masukkan kode unik">
+  <button id="tambahBtn" onclick="tambah()">Tambah</button>
 
-  <!-- Kontrol atas -->
-  <div class="top-controls">
-    <div class="filter-container">
-      <select id="filterNama">
-        <option value="">Pilih Nama</option>
-      </select>
-      <input type="date" id="filterTanggal">
-    </div>
-    <div class="button-container">
-      <button onclick="fetchRiwayatPembayaran()">Pencarian</button>
-      <button onclick="clearFilters()">Clear</button>
-      <button onclick="window.location.href='index.html';">Kembali ke Home</button>
-    </div>
-  </div>
 
-  <!-- Tabel -->
-  <table id="laporanTable">
+
+  <div id="result" style="margin: 10px 0; font-weight: bold;"></div>
+
+  <h2>Data Saldo Pemain</h2>
+
+  <!-- <input type="text" id="search" placeholder="Cari Nama Pemain..." oninput="filterData()"> -->
+  <table>
     <thead>
       <tr>
-        <th>Tanggal</th>
         <th>Nama</th>
-        <th>Pembayaran</th>
-        <th>Keterangan</th>
+        <th>Saldo</th>
+        <th class="aksi-th">Aksi</th>
       </tr>
     </thead>
-    <tbody></tbody>
+
+    <div id="kodeUnikDisplay" style="display: none; margin-top: 20px; text-align: center; font-weight: bold; font-size: 18px; color: #13007c;">
+      Kode Unik Hari Ini: <span id="kodeUnikText">Memuat...</span>
+    </div>
+
+    
+    <tbody id="table-body">
+      <tr><td colspan="3">Sabara Cok...</td></tr>
+    </tbody>
   </table>
 
-  <!-- Total -->
-  <div class="total-container">
-    Total: <span id="totalPembayaran">Rp 0</span>
+  <button id="adminBtn" onclick="toggleLogin()">Mode Bayar</button>
+  <!-- Tombol Riwayat -->
+  <button onclick="window.location.href='laporan.html'">Riwayat</button>
+  <button onclick="window.location.href='Login.html'">Kas PB</button>
+  
+  <!-- Modal Bayar -->
+  <div id="overlay" onclick="tutupModal()"></div>
+  <div id="modal">
+    <h3>Form Pembayaran</h3>
+    <input type="hidden" id="bayar-nama">
+    <label>Nama: <span id="modal-nama"></span></label>
+    <input type="number" id="bayar-jumlah" placeholder="Jumlah Pembayaran (Rp)">
+    <button onclick="submitBayar()">Input</button>
+    <button onclick="tutupModal()">Tutup</button>
   </div>
 
-  <!-- Pagination -->
-  <div class="pagination">
-    <button id="prevButton" onclick="changePage('prev')" disabled>Prev</button>
-    <span class="page-number" id="pageNumber">1</span>
-    <button id="nextButton" onclick="changePage('next')">Next</button>
+  <!-- Modal Login Admin -->
+  <div id="loginModal">
+    <h3>Login Admin</h3>
+    <input type="password" id="adminPassword" placeholder="Masukkan password admin">
+    <button onclick="submitLogin()">Login</button>
+    <button onclick="tutupModal()">Tutup</button>
   </div>
 
-  <!-- Script -->
+  <!-- Popup Loading -->
+<div id="loadingModal" style="display: none;">
+  <div id="loadingContent">
+    <h3>Sabar Lagi</h3>
+    <img src="image/loading.gif" alt="Loading..." class="loading-gif" />
+  </div>
+</div>
+
+
+
   <script>
-    let allRiwayat = [];
-    let currentPage = 1;
-    const rowsPerPage = 50;
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbyGOXVLo_JyphHBIWkYjN0gJAWevvXJPpHbcHcN_UnHlAN1-DSeqXN7wdtchCioiid9Iw/exec";
+    const hargaPerKok = 3000;
+    let globalData = [];
 
-    function fetchRiwayatPembayaran() {
-      const namaFilter = document.getElementById("filterNama").value.toLowerCase();
-      const tanggalFilter = document.getElementById("filterTanggal").value;
-      const loader = document.getElementById("loader");
+     // Fungsi untuk generate kode unik berdasarkan tanggal dan angka acak
+     function generateKodeUnik() {
+      const today = new Date();
+      const tanggal = today.toISOString().split('T')[0].replace(/-/g, '');  // Ambil tanggal dalam format YYYYMMDD
+      const randomNum = Math.floor(Math.random() * 1000);  // Generate angka acak 3 digit
+      const kodeUnik = `PB-${tanggal}-${randomNum.toString().padStart(3, '0')}`;  // Format kode unik
+      return kodeUnik;
+    }
 
-      loader.style.display = 'block'; // tampilkan loader
+    // Fungsi untuk menyimpan kode unik di localStorage jika sudah ganti hari
+    function updateKodeUnik() {
+      const lastUpdate = localStorage.getItem("lastUpdate");
+      const today = new Date().toISOString().split('T')[0]; // Tanggal hari ini
 
-      if (allRiwayat.length === 0) {
-        fetch('https://script.google.com/macros/s/AKfycbyGOXVLo_JyphHBIWkYjN0gJAWevvXJPpHbcHcN_UnHlAN1-DSeqXN7wdtchCioiid9Iw/exec?action=riwayat')
-          .then(response => response.json())
-          .then(data => {
-            allRiwayat = data;
-            displayData(data, namaFilter, tanggalFilter);
-            populateNamaDropdown(data);
-            loader.style.display = 'none'; // sembunyikan loader
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-            loader.style.display = 'none';
-          });
+      if (lastUpdate !== today) {
+        const newKodeUnik = generateKodeUnik();
+        localStorage.setItem("kodeUnik", newKodeUnik);
+        localStorage.setItem("lastUpdate", today);  // Simpan tanggal terakhir pembaruan
+      }
+    }
+
+
+     // Fungsi untuk menampilkan kode unik
+  function tampilkanKodeUnik() {
+    if (isLoggedIn()) {
+      const kodeUnik = localStorage.getItem("kodeUnik");
+      document.getElementById("kodeUnikText").textContent = kodeUnik;
+      document.getElementById("kodeUnikDisplay").style.display = "block";
+    } else {
+      document.getElementById("kodeUnikDisplay").style.display = "none";
+    }
+  }
+
+
+     // Menjalankan kode saat halaman dimuat
+     window.onload = function() {
+      updateKodeUnik();         // <-- Tambahkan ini
+      tampilkanKodeUnik();      // Tetap tampilkan
+      loadData();
+    };
+
+
+
+
+
+    // Fungsi untuk menonaktifkan tombol
+    function disableButton(button) {
+      button.disabled = true;
+      button.style.cursor = 'not-allowed';
+    }
+
+    // Fungsi untuk mengaktifkan tombol
+    function enableButton(button) {
+      button.disabled = false;
+      button.style.cursor = 'pointer';
+    }
+
+    function isLoggedIn() {
+      return sessionStorage.getItem("loggedIn") === "true";
+    }
+
+    function toggleLogin() {
+      if (isLoggedIn()) {
+        sessionStorage.removeItem("loggedIn");
+        document.getElementById("adminBtn").textContent = "Login Admin";
+        loadData();
+        tampilkanKodeUnik(); // tambahkan ini saat logout
       } else {
-        displayData(allRiwayat, namaFilter, tanggalFilter);
-        loader.style.display = 'none'; // sembunyikan loader
+        document.getElementById("loginModal").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
       }
     }
 
-    function displayData(data, namaFilter, tanggalFilter) {
-      const tbody = document.querySelector("#laporanTable tbody");
-      tbody.innerHTML = "";
-
-      const sortedData = [...data].sort((a, b) => new Date(b[0]) - new Date(a[0]));
-
-      const filteredData = sortedData.filter(row => {
-        const nama = row[1].toLowerCase();
-        const tanggal = formatDate(row[0]);
-        return (
-          (namaFilter === "" || nama.includes(namaFilter)) &&
-          (tanggalFilter === "" || tanggal === formatDate(tanggalFilter))
-        );
-      });
-
-      // hitung total dari seluruh data hasil filter
-      const totalPembayaran = filteredData.reduce((sum, row) => {
-        const jumlah = parseFloat(row[2]);
-        return sum + (isNaN(jumlah) ? 0 : jumlah);
-      }, 0);
-
-      // pagination
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const currentPageData = filteredData.slice(startIndex, endIndex);
-
-      currentPageData.forEach(row => {
-        const tanggal = formatDate(row[0]);
-        const nama = row[1];
-        const pembayaran = parseFloat(row[2]);
-        const keterangan = row[3];
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${tanggal}</td>
-          <td>${nama}</td>
-          <td>${formatCurrency(pembayaran)}</td>
-          <td>${keterangan}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById("totalPembayaran").textContent = formatCurrency(totalPembayaran);
-
-      const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-      document.getElementById("pageNumber").textContent = currentPage;
-      document.getElementById("prevButton").disabled = currentPage === 1;
-      document.getElementById("nextButton").disabled = currentPage === totalPages;
-    }
-
-    function changePage(direction) {
-      const totalPages = Math.ceil(allRiwayat.length / rowsPerPage);
-      if (direction === 'next' && currentPage < totalPages) {
-        currentPage++;
-      } else if (direction === 'prev' && currentPage > 1) {
-        currentPage--;
+    function submitLogin() {
+      const pass = document.getElementById("adminPassword").value;
+      if (pass === "admin123") {
+        sessionStorage.setItem("loggedIn", "true");
+        document.getElementById("adminBtn").textContent = "Logout";
+        tutupModal();
+        loadData();
+        tampilkanKodeUnik(); // tambahkan ini saat login berhasil
+      } else {
+        alert("Password salah!");
       }
-      const namaFilter = document.getElementById("filterNama").value.toLowerCase();
-      const tanggalFilter = document.getElementById("filterTanggal").value;
-      displayData(allRiwayat, namaFilter, tanggalFilter);
     }
 
-    function formatDate(date) {
-      const d = new Date(date);
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
-      return `${day}-${month}-${year}`;
+    function tutupModal() {
+      document.getElementById("modal").style.display = "none";
+      document.getElementById("loginModal").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
     }
 
-    function formatCurrency(amount) {
-      return `Rp ${amount.toLocaleString('id-ID')}`;
+    function tambahNamaBaru() {
+      const namaBaruInput = document.getElementById("namaBaru");
+      const button = document.querySelector("button[onclick='tambahNamaBaru()']");
+      disableButton(button); // Menonaktifkan tombol selama proses
+
+      const nama = namaBaruInput.value.trim();
+      if (!nama) {
+        alert("Nama tidak boleh kosong!");
+        enableButton(button); // Mengaktifkan tombol kembali
+        return;
+      }
+
+      const sudahAda = globalData.slice(1).some(row => row[0].toLowerCase() === nama.toLowerCase());
+      if (sudahAda) {
+        alert("Nama sudah terdaftar!");
+        enableButton(button); // Mengaktifkan tombol kembali
+        return;
+      }
+
+      const data = { nama, pemakaian: 0, pembayaran: 0, saldo: 0 };
+      fetch(`${BASE_URL}?action=tambah`, {
+        method: "POST", body: JSON.stringify(data)
+      }).then(r => r.text()).then(msg => {
+        alert(msg);
+        namaBaruInput.value = "";
+        loadData();
+        enableButton(button); // Mengaktifkan tombol kembali
+      });
     }
 
-    function populateNamaDropdown(data) {
-      const dropdown = document.getElementById("filterNama");
-      const names = [...new Set(data.map(row => row[1]))];
-      dropdown.innerHTML = '<option value="">Pilih Nama</option>';
-      names.forEach(nama => {
+  function tambah() {
+      const tambahBtn = document.getElementById("tambahBtn");
+      const loadingModal = document.getElementById("loadingModal");
+
+      tambahBtn.disabled = true; // Cegah double klik
+      loadingModal.style.display = "flex"; // Tampilkan popup loading
+      
+      const nama = document.getElementById("namaDropdown").value;
+      const pemakaian = parseFloat(document.getElementById("pemakaian").value);
+      const kodeInput = document.getElementById("kodeUnik").value.trim();
+      const kodeUnikAsli = localStorage.getItem("kodeUnik");
+
+      // Validasi input
+      if (!nama || pemakaian <= 0) {
+        alert("Pilih nama dan isi jumlah kok!");
+        tambahBtn.disabled = false;
+        loadingModal.style.display = "none"; // Sembunyikan loading
+        return;
+      }
+      if (kodeInput.length !== 3 || isNaN(kodeInput)) {
+        alert("Masukkan 3 digit angka kode unik!");
+        tambahBtn.disabled = false;
+        loadingModal.style.display = "none"; // Sembunyikan loading
+        return;
+      }
+
+      const tigaDigit = kodeUnikAsli.slice(-3);  // Ambil 3 digit terakhir dari kode unik di localStorage
+      if (kodeInput !== tigaDigit) {
+        alert("Kode unik salah! Transaksi gagal.");
+        tambahBtn.disabled = false;
+        loadingModal.style.display = "none"; // Sembunyikan loading
+        return;
+      }
+
+      // Jika validasi benar, kirim data
+      const data = { nama, pemakaian, pembayaran: 0 };
+
+      fetch(`${BASE_URL}?action=tambah`, {
+        method: "POST", 
+        body: JSON.stringify(data),
+      })
+      .then(r => r.text())
+      .then(msg => {
+        document.getElementById("result").textContent = msg;
+        document.getElementById("pemakaian").value = "";
+        document.getElementById("kodeUnik").value = "";
+        loadData(); // refresh data
+        tambahBtn.disabled = false; // Aktifkan kembali tombol setelah berhasil
+        loadingModal.style.display = "none"; // Sembunyikan loading
+      })
+      .catch(err => {
+        console.error("Terjadi kesalahan:", err);
+        alert("Terjadi kesalahan saat menambah data.");
+        tambahBtn.disabled = false; // Aktifkan kembali tombol jika gagal
+        loadingModal.style.display = "none"; // Sembunyikan loading
+      });
+    }
+
+
+
+
+    function bukaBayar(nama) {
+      document.getElementById("bayar-nama").value = nama;
+      document.getElementById("modal-nama").textContent = nama;
+      document.getElementById("bayar-jumlah").value = "";
+      document.getElementById("modal").style.display = "block";
+      document.getElementById("overlay").style.display = "block";
+    }
+
+    function submitBayar() {
+  const nama = document.getElementById("bayar-nama").value;
+  const jumlah = parseFloat(document.getElementById("bayar-jumlah").value);
+  const kodeUnik = localStorage.getItem("kodeUnik");
+
+  if (!jumlah || jumlah <= 0) {
+    alert("Jumlah pembayaran harus lebih dari 0");
+    return;
+  }
+
+  // Tampilkan loading
+  document.getElementById("loadingModal").style.display = "flex";
+
+  const data = {
+    nama,
+    pemakaian: 0,
+    pembayaran: jumlah,
+    saldo: jumlah,
+    kode: kodeUnik
+  };
+
+  fetch(`${BASE_URL}?action=bayar`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  }).then(res => res.text())
+    .then(msg => {
+      alert(msg);
+      document.getElementById("bayar-jumlah").value = "";
+      tutupModal();
+      loadData();
+    })
+    .finally(() => {
+      // Sembunyikan loading meskipun ada error
+      document.getElementById("loadingModal").style.display = "none";
+    });
+}
+
+
+    function hapusData(nama) {
+      if (!confirm(`Yakin hapus data ${nama}?`)) return;
+      fetch(`${BASE_URL}?action=hapus`, {
+        method: "POST", body: JSON.stringify({ nama })
+      }).then(r => r.text()).then(msg => {
+        alert(msg); loadData();
+      });
+    }
+
+    function isiDropdownNama() {
+      const dropdown = document.getElementById("namaDropdown");
+      dropdown.innerHTML = '<option value="">-- Pilih Pemain --</option>';
+      globalData.slice(1).forEach(row => {
         const option = document.createElement("option");
-        option.value = nama;
-        option.textContent = nama;
+        option.value = row[0];
+        option.textContent = row[0];
         dropdown.appendChild(option);
       });
     }
 
-    function clearFilters() {
-      document.getElementById("filterNama").value = "";
-      document.getElementById("filterTanggal").value = "";
-      currentPage = 1;
-      displayData(allRiwayat, "", "");
+    function filterData() {
+      const keyword = document.getElementById("search").value.toLowerCase();
+      const filtered = globalData.filter((row, i) => i === 0 || row[0].toLowerCase().includes(keyword));
+      renderTable(filtered);
     }
 
-    window.onload = fetchRiwayatPembayaran;
+    function renderTable(data) {
+      const tbody = document.getElementById("table-body");
+      tbody.innerHTML = "";
+      const loggedIn = isLoggedIn();
+
+      // Tampilkan / sembunyikan header kolom aksi
+      const aksiTh = document.querySelector(".aksi-th");
+      aksiTh.style.display = loggedIn ? "table-cell" : "none";
+
+      data.slice(1).forEach(row => {
+        const [nama, pemakaian, pembayaran, saldo] = row;
+        const tr = document.createElement("tr");
+        let html = `
+          <td data-label="Nama">${nama}</td>
+          <td data-label="Saldo">${formatRupiah(saldo)}</td>
+        `;
+
+        if (loggedIn) {
+          html += `
+            <td class="aksi-td" data-label="Aksi" style="display: table-cell">
+              <div class="table-actions">
+                <button onclick="hapusData('${nama}')">
+                  <img src="image/trash.png">
+                </button>
+                <button onclick="bukaBayar('${nama}')">
+                  <img src="image/dollar.png">
+                </button>
+              </div>
+            </td>
+          `;
+        } else {
+          html += `<td class="aksi-td" style="display: none;"></td>`;
+        }
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+      });
+
+      if (tbody.innerHTML === "") {
+        tbody.innerHTML = `<tr><td colspan="${loggedIn ? 3 : 2}">Tidak ada data.</td></tr>`;
+      }
+    }
+
+    function formatRupiah(value) {
+      return (parseFloat(value) || 0).toLocaleString('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      });
+    }
+
+    // Load data untuk ditampilkan
+    function loadData() {
+      fetch(`${BASE_URL}?action=getSaldoPemain`)
+        .then(r => r.json())
+        .then(data => {
+          globalData = data;
+          renderTable(data);
+          isiDropdownNama();
+        });
+    }
+
+    loadData();
   </script>
 </body>
 </html>
