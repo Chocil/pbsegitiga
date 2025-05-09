@@ -143,21 +143,133 @@
         overflow-x: auto;
       }
     }
-.back-button {
-  background-color: #4CAF50;
-  color: #fff;
+
+    .back-button {
+  margin-bottom: 10px;
   padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+}
+
+.rekap-button {
+  padding: 10px 20px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.rekap-button:hover {
+  background-color: #1976D2;
+}
+
+.aksi-buttons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal Styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: auto;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-content h3 {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.modal input,
+.modal select,
+.modal button {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%; /* Full width for inputs and buttons */
+}
+
+.modal button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+  background-color: #45a049;
+}
+
+.modal .close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.modal .close:hover,
+.modal .close:focus {
+  color: black;
   text-decoration: none;
+  cursor: pointer;
 }
 
-.back-button:hover {
-  background-color: #3e8e41;
+/* Responsive Design for Modal */
+@media (max-width: 600px) {
+  .modal-content {
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .modal input,
+  .modal select,
+  .modal button {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .modal .close {
+    font-size: 25px;
+    top: 5px;
+    right: 10px;
+  }
 }
 
-    
+
+
   </style>
   
 
@@ -179,8 +291,9 @@
 
   <div class="table-container">
     <table id="data-transaksi">
-      <button onclick="showRekapanKas()" style="padding: 10px; background-color: #2196F3; color: white;">Rekapan KAS</button>
-      <a href="index.html" class="back-button">Back</a>
+        <button onclick="showRekapanKas()" class="rekap-button">Rekapan KAS</button>
+      <button onclick="window.location.href='index.html'" class="back-button">← Kembali ke Beranda</button>
+
       <thead>
         <tr>
           <th>Tanggal</th>
@@ -225,6 +338,15 @@
     const sheetUrl = 'https://script.google.com/macros/s/AKfycbyRsN7XZr-PH94UcuAU10hUw8XYFkmA83eUYzTKiSJgbCbnLo3L0NI6HCtbW6qGq3rK-A/exec'; // Ganti dengan URL Apps Script Anda
     let selectedKode = null;
 
+    function disableAllButtons() {
+    document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+    }
+
+    function enableAllButtons() {
+    document.querySelectorAll('button').forEach(btn => btn.disabled = false);
+    }
+
+
     function formatTanggal(tanggal) {
       const d = new Date(tanggal);
       const day = d.getDate().toString().padStart(2, '0');
@@ -266,13 +388,16 @@
           <td>${formattedJumlah}</td>
           <td><span class="jenis-teks ${jenis}">${jenisLabel}</span></td>
           <td>
-              <button onclick="editTransaksi('${kode}', '${tanggal}', '${keterangan}', '${jumlah}', '${jenis}')" style="background:none; border:none;">
-              <img src="image/pen.png" alt="Edit" width="20" height="20">
-              </button>
-              <button onclick="hapusTransaksi('${kode}')" style="background:none; border:none;">
-              <img src="image/trash.png" alt="Hapus" width="20" height="20">
-              </button>
-          </td>
+            <div class="aksi-buttons">
+                <button onclick="editTransaksi('${kode}', '${tanggal}', '${keterangan}', '${jumlah}', '${jenis}')" style="background:none; border:none;">
+                <img src="image/pen.png" alt="Edit" width="15" height="15">
+                </button>
+                <button onclick="hapusTransaksi('${kode}')" style="background:none; border:none;">
+                <img src="image/trash.png" alt="Hapus" width="15" height="">
+                </button>
+            </div>
+            </td>
+
         `;
 
         tbody.appendChild(tr);
@@ -290,25 +415,33 @@
     }
 
     async function tambahTransaksi() {
-      const tanggal = document.getElementById('tanggal').value;
-      const keterangan = document.getElementById('keterangan').value;
-      const jumlah = document.getElementById('jumlah').value;
-      const jenis = document.getElementById('jenis').value;
+    disableAllButtons();
+    const tanggal = document.getElementById('tanggal').value;
+    const keterangan = document.getElementById('keterangan').value;
+    const jumlah = document.getElementById('jumlah').value;
+    const jenis = document.getElementById('jenis').value;
 
-      const response = await fetch(`${sheetUrl}?action=addTransaction&tanggal=${tanggal}&keterangan=${keterangan}&jumlah=${jumlah}&jenis=${jenis}`);
-      const result = await response.json();
+    try {
+        const response = await fetch(`${sheetUrl}?action=addTransaction&tanggal=${tanggal}&keterangan=${keterangan}&jumlah=${jumlah}&jenis=${jenis}`);
+        const result = await response.json();
 
-      if (result.success) {
+        if (result.success) {
         alert('Transaksi berhasil ditambahkan!');
         getData();
         document.getElementById('tanggal').value = '';
         document.getElementById('keterangan').value = '';
         document.getElementById('jumlah').value = '';
         document.getElementById('jenis').value = 'masuk';
-      } else {
+        } else {
         alert('Gagal menambahkan transaksi.');
-      }
+        }
+    } catch (error) {
+        alert('Terjadi kesalahan. Coba lagi nanti.');
+    } finally {
+        enableAllButtons();
     }
+    }
+
 
     function editTransaksi(kode, tanggal, keterangan, jumlah, jenis) {
       selectedKode = kode;
@@ -320,38 +453,57 @@
     }
 
     async function simpanEdit() {
-      const tanggal = document.getElementById('edit-tanggal').value;
-      const keterangan = document.getElementById('edit-keterangan').value;
-      const jumlah = document.getElementById('edit-jumlah').value;
-      const jenis = document.getElementById('edit-jenis').value;
+  disableAllButtons();
+  const tanggal = document.getElementById('edit-tanggal').value;
+  const keterangan = document.getElementById('edit-keterangan').value;
+  const jumlah = document.getElementById('edit-jumlah').value;
+  const jenis = document.getElementById('edit-jenis').value;
 
-      const response = await fetch(`${sheetUrl}?action=updateTransaction&kode=${selectedKode}&tanggal=${tanggal}&keterangan=${keterangan}&jumlah=${jumlah}&jenis=${jenis}`);
-      const result = await response.json();
+  try {
+    const response = await fetch(`${sheetUrl}?action=updateTransaction&kode=${selectedKode}&tanggal=${tanggal}&keterangan=${keterangan}&jumlah=${jumlah}&jenis=${jenis}`);
+    const result = await response.json();
 
-      if (result.success) {
-        alert('Transaksi berhasil diperbarui!');
-        getData();
-        closeModal();
-      } else {
-        alert('Gagal memperbarui transaksi.');
-      }
+    if (result.success) {
+      alert('Transaksi berhasil diperbarui!');
+      getData();
+      closeModal();
+    } else {
+      alert('Gagal memperbarui transaksi.');
     }
+  } catch (error) {
+    alert('Terjadi kesalahan. Coba lagi nanti.');
+  } finally {
+    enableAllButtons();
+  }
+}
+
 
     function closeModal() {
       document.getElementById('myModal').style.display = 'none';
     }
 
     async function hapusTransaksi(kode) {
-      const response = await fetch(`${sheetUrl}?action=deleteTransaction&kode=${kode}`);
-      const result = await response.json();
+  if (!confirm("Yakin ingin menghapus transaksi ini?")) return;
 
-      if (result.success) {
-        alert('Transaksi berhasil dihapus!');
-        getData();
-      } else {
-        alert('Gagal menghapus transaksi.');
-      }
+  disableAllButtons();
+
+  try {
+    const response = await fetch(`${sheetUrl}?action=deleteTransaction&kode=${kode}`);
+    const result = await response.json();
+
+    if (result.success) {
+      alert('Transaksi berhasil dihapus!');
+      getData();
+    } else {
+      alert('Gagal menghapus transaksi.');
     }
+  } catch (error) {
+    alert('Terjadi kesalahan. Coba lagi nanti.');
+  } finally {
+    enableAllButtons();
+  }
+}
+
 
     function showRekapanKas() {
       document.getElementById('rekapanModal').style.display = 'block';
