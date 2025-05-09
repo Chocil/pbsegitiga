@@ -787,13 +787,22 @@ th:nth-child(2) {
       }
     }
 
-    function formatRupiah(value) {
-      return (parseFloat(value) || 0).toLocaleString('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0
-      });
-    }
+    // Fungsi untuk memformat angka dengan titik (sebagai pemisah ribuan)
+function formatRupiah(value) {
+  // Format angka dengan toLocaleString tanpa simbol IDR dan dengan titik sebagai pemisah ribuan
+  return (parseFloat(value) || 0).toLocaleString('id-ID', {
+    minimumFractionDigits: 0
+  });
+}
+
+// Fungsi untuk memformat input angka saat user mengetik
+function formatInputAngka(input) {
+  let value = input.value.replace(/[^\d]/g, ''); // Hapus karakter selain angka
+  if (value) {
+    input.value = formatRupiah(value); // Format angka dengan titik
+  }
+}
+
 
     // Load data untuk ditampilkan
     function loadData() {
@@ -805,6 +814,8 @@ th:nth-child(2) {
           isiDropdownNama();
         });
     }
+
+    
 
     loadData();
   </script>
