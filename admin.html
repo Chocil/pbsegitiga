@@ -71,7 +71,7 @@
     }
   
     th {
-      background-color: #2196F3;
+      background-color: #13007c;
       color: white;
       position: sticky;
       top: 0;
@@ -156,7 +156,7 @@
 
 .rekap-button {
   padding: 10px 20px;
-  background-color: #2196F3;
+  background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 6px;
@@ -167,7 +167,7 @@
 }
 
 .rekap-button:hover {
-  background-color: #1976D2;
+  background-color: #45a049;
 }
 
 .aksi-buttons {
@@ -285,7 +285,7 @@ th, td {
 }
 
 th {
-  background-color: #2196F3;
+  background-color: #13007c;
   color: white;
   position: sticky;
   top: 0;
@@ -368,7 +368,23 @@ tbody tr:hover {
 </head>
 <body>
 
-  <h2>Laporan Keuangan</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <!-- Logo Kiri -->
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="image/logo.png" alt="Logo PB Segitiga Kiri" style="height: 110px;">
+          <div>
+            <h2 style="margin: 0; color:#13007c">Laporan Kas</h2>
+            <p style="margin-top: 0; font-size: 24px; font-weight: bold; color:#13007c">PB SEGITIGA</p>
+          </div>
+        </div>
+        
+        <!-- Logo Kanan -->
+        <img src="image/icon1.gif" alt="Logo Kanan" style="height: 110px;">
+      </div>
+      
+      
+      
+  
 
   <div class="form-container">
     <input type="date" id="tanggal" required>
@@ -671,6 +687,6 @@ function cleanFormattedNumber(str) {
       }
     });
   </script>
-  
+
 </body>
 </html>
