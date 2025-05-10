@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
+  
   <title>Saldo Pemain</title>
   <style>
     body {
@@ -394,19 +395,19 @@ th:nth-child(2) {
 <body>
 
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <!-- Logo Kiri -->
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <img src="image/logo.png" alt="Logo PB Segitiga Kiri" style="height: 110px;">
-      <div>
-        <p style="margin: 0; font-size: 14px; font-weight: bold; color:#13007c">Pencatatan Shutelkok</p>
-        <p style="margin-top: 0; font-size: 30px; font-weight: bold; color:#13007c">PB SEGITIGA</p>
-      </div>
+  <!-- Logo Kiri -->
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <img src="image/logo.png" alt="Logo PB Segitiga Kiri" style="height: 110px;">
+    <div>
+      <p style="margin: 0; font-size: 14px; font-weight: bold; color:#13007c">Pencatatan Shutelkok</p>
+      <p style="margin-top: 0; font-size: 30px; font-weight: bold; color:#13007c; font-family: 'Cherry Bomb One', cursive;">PB SEGITIGA</p>
     </div>
-    
-    <!-- Logo Kanan -->
-    <img src="image/icon1.gif" alt="Logo Kanan" style="height: 110px;">
   </div>
-  
+  <!-- Logo Kanan -->
+  <img src="image/icon1.gif" alt="Logo Kanan" style="height: 110px;">
+</div>
+
+
   <!-- Form Tambah Nama -->
   <input id="namaBaru" placeholder="Nama Pemain Baru">
   <button onclick="tambahNamaBaru()">Tambah Nama Pemain</button>
@@ -453,8 +454,8 @@ th:nth-child(2) {
 
   <button id="adminBtn" onclick="toggleLogin()">Mode Bayar</button>
   <!-- Tombol Riwayat -->
-  <button onclick="window.location.href='laporan.html'">History Pembayaran</button>
-  <button onclick="window.location.href='Login.html'">Kas PB SEGITIGA</button>
+  <button onclick="window.location.href='laporan.html'">Riwayat</button>
+  <button onclick="window.location.href='Login.html'">Kas PB</button>
   
   <!-- Modal Bayar -->
   <div id="overlay" onclick="tutupModal()"></div>
