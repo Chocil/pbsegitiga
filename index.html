@@ -758,9 +758,12 @@ th:nth-child(2) {
       data.slice(1).forEach(row => {
         const [nama, pemakaian, pembayaran, saldo] = row;
         const tr = document.createElement("tr");
+
         let html = `
           <td data-label="Nama">${nama}</td>
-          <td data-label="Saldo">${formatRupiah(saldo)}</td>
+          <td data-label="Saldo" style="color: ${parseInt(saldo) < 0 ? 'red' : 'green'};">
+            ${formatRupiah(saldo)}
+          </td>
         `;
 
         if (loggedIn) {
@@ -783,6 +786,7 @@ th:nth-child(2) {
         tbody.appendChild(tr);
       });
 
+      
       if (tbody.innerHTML === "") {
         tbody.innerHTML = `<tr><td colspan="${loggedIn ? 3 : 2}">Tidak ada data.</td></tr>`;
       }
