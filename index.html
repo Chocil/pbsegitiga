@@ -462,7 +462,8 @@ th:nth-child(2) {
     <h3>Form Pembayaran</h3>
     <input type="hidden" id="bayar-nama">
     <label>Nama: <span id="modal-nama"></span></label>
-    <input type="number" id="bayar-jumlah" placeholder="Jumlah Pembayaran (Rp)">
+    <input type="text" id="bayar-jumlah" name="bayar" placeholder="Jumlah Pembayaran (Rp)"/>
+
     <button onclick="submitBayar()">Input</button>
     <button onclick="tutupModal()">Tutup</button>
   </div>
@@ -683,39 +684,39 @@ th:nth-child(2) {
 
     function submitBayar() {
   const nama = document.getElementById("bayar-nama").value;
-  const jumlah = parseFloat(document.getElementById("bayar-jumlah").value);
+  const jumlah = parseNumber(document.getElementById("bayar-jumlah"));
   const kodeUnik = localStorage.getItem("kodeUnik");
 
   if (!jumlah || jumlah <= 0) {
-    alert("Jumlah pembayaran harus lebih dari 0");
+    alert("Jumlah pembayaran tidak valid!");
     return;
   }
 
   // Tampilkan loading
   document.getElementById("loadingModal").style.display = "flex";
 
+   // Kirim data pembayaran ke server
   const data = {
     nama,
-    pemakaian: 0,
     pembayaran: jumlah,
-    saldo: jumlah,
-    kode: kodeUnik
+    kodeUnik
   };
 
   fetch(`${BASE_URL}?action=bayar`, {
     method: "POST",
     body: JSON.stringify(data)
-  }).then(res => res.text())
-    .then(msg => {
-      alert(msg);
-      document.getElementById("bayar-jumlah").value = "";
-      tutupModal();
-      loadData();
-    })
+  })
+  .then(response => response.text())
+  .then(msg => {
+    alert(msg);
+    tutupModal();  // Menutup modal setelah pembayaran
+    loadData();    // Memuat ulang data setelah pembayaran
+  })
     .finally(() => {
       // Sembunyikan loading meskipun ada error
       document.getElementById("loadingModal").style.display = "none";
     });
+    
 }
 
 
@@ -815,7 +816,30 @@ function formatInputAngka(input) {
         });
     }
 
-    
+ const bayarInput = document.getElementById("bayar-jumlah");
+
+  bayarInput.addEventListener("input", function (e) {
+    // Ambil hanya angka
+    const raw = this.value.replace(/\D/g, "");
+
+    // Format dengan titik ribuan
+    const formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    // Simpan data mentah tanpa titik di atribut data-raw
+    this.setAttribute("data-raw", raw);
+
+    // Tampilkan yang diformat
+    this.value = formatted;
+  });
+
+  function cleanFormattedNumber(str) {
+  console.log("Original Value: ", str);  // Cek nilai sebelum diubah
+  return str.replace(/\./g, '');         // Hapus titik
+}
+    // Fungsi untuk menghilangkan titik saat pengiriman data, hanya menggunakan angka
+function parseNumber(input) {
+  return parseFloat(input.value.replace(/\./g, '')) || 0;
+}
 
     loadData();
   </script>
