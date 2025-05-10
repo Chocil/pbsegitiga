@@ -360,6 +360,154 @@ tbody tr:hover {
   100% { transform: rotate(360deg); }
 }
 
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-family: sans-serif;
+  max-width: 280px; /* Biar pas di HP */
+  margin: 0 auto; /* Tengahin */
+}
+
+.filter-bar label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-bar input[type="date"] {
+  padding: 0.3rem 0.4rem;
+  font-size: 0.85rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.filter-bar button {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.filter-bar button:first-of-type {
+  background-color: #007bff;
+  color: white;
+}
+
+.filter-bar button:last-of-type {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Modal Edit & Rekapan Kas Enhancements */
+.modal-content {
+  background-color: #ffffff;
+  padding: 25px 20px;
+  border-radius: 12px;
+  max-width: 480px;
+  width: 100%;
+  margin: auto;
+  position: relative;
+  animation: slideDown 0.3s ease-out;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Animasi modal muncul */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #13007c;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.modal-content p {
+  font-size: 16px;
+  color: #333;
+}
+
+.modal-content strong {
+  font-weight: bold;
+}
+
+/* Tombol modal */
+.modal button {
+  background-color: #13007c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+  background-color: #0d0069;
+}
+
+.modal .close {
+  top: 12px;
+  right: 15px;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.modal .close:hover {
+  color: #13007c;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .modal-content {
+    padding: 20px 15px;
+  }
+
+  .modal h3 {
+    font-size: 18px;
+  }
+
+  .modal-content p {
+    font-size: 14px;
+  }
+
+  .modal button {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+}
+
+.text-masuk {
+  color: green;
+  font-weight: bold;
+}
+
+.text-keluar {
+  color: red;
+  font-weight: bold;
+}
 
 
   </style>
@@ -396,6 +544,25 @@ tbody tr:hover {
     </select>
     <button onclick="tambahTransaksi()">Tambah Transaksi</button>
   </div>
+
+  <div class="filter-bar">
+  <div class="filter-group">
+    <label for="filter-dari">Dari:</label>
+    <input type="date" id="filter-dari">
+  </div>
+
+  <div class="filter-group">
+    <label for="filter-sampai">Sampai:</label>
+    <input type="date" id="filter-sampai">
+  </div>
+
+  <div>
+    <button onclick="filterByTanggal()">Filter</button>
+    <button onclick="resetFilter()">Reset</button>
+  </div>
+</div>
+
+
 
   <div class="table-container">
     <table id="data-transaksi">
@@ -436,9 +603,9 @@ tbody tr:hover {
     <div class="modal-content">
       <span class="close" onclick="closeRekapanModal()">&times;</span>
       <h3>Rekapan Kas</h3>
-      <p>Total Uang Masuk: <strong id="rekap-masuk">-</strong></p>
-      <p>Total Uang Keluar: <strong id="rekap-keluar">-</strong></p>
-      <p><strong>Saldo Kas: <span id="rekap-saldo">-</span></strong></p>
+      <p><strong style="color:#13007c">Total Uang Masuk:</span><strong id="rekap-masuk" class="text-masuk">-</strong></p>
+      <p><strong style="color:#13007c">Total Uang Keluar:</span><strong id="rekap-keluar" class="text-keluar">-</strong></p>
+      <p><strong style="color:#13007c">Saldo Kas: <span id="rekap-saldo" style="color:#0026ff">-</span></strong></p>
     </div>
   </div>
 
@@ -527,8 +694,12 @@ tbody tr:hover {
         }
       });
 
-      document.getElementById('rekap-masuk').textContent = formatRupiah(totalMasuk);
-      document.getElementById('rekap-keluar').textContent = formatRupiah(totalKeluar);
+      document.getElementById("rekap-masuk").textContent = formatRupiah(totalMasuk);
+      document.getElementById("rekap-masuk").className = "text-masuk";
+
+      document.getElementById("rekap-keluar").textContent = formatRupiah(totalKeluar);
+      document.getElementById("rekap-keluar").className = "text-keluar";
+
       document.getElementById('rekap-saldo').textContent = formatRupiah(totalMasuk - totalKeluar);
     }
 
@@ -686,6 +857,44 @@ function cleanFormattedNumber(str) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       }
     });
+
+    function filterByTanggal() {
+  const dari = document.getElementById("filter-dari").value;
+  const sampai = document.getElementById("filter-sampai").value;
+
+  if (!dari || !sampai) {
+    alert("Mohon pilih kedua tanggal.");
+    return;
+  }
+
+  const tbody = document.querySelector("#data-transaksi tbody");
+  const rows = tbody.querySelectorAll("tr");
+
+  const dariDate = new Date(dari);
+  const sampaiDate = new Date(sampai);
+  sampaiDate.setHours(23, 59, 59); // agar sampai hari penuh
+
+  rows.forEach(row => {
+    const tanggalText = row.cells[0].textContent;
+    const [day, month, year] = tanggalText.split("-");
+    const rowDate = new Date(`${year}-${month}-${day}`);
+
+    if (rowDate >= dariDate && rowDate <= sampaiDate) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+}
+
+function resetFilter() {
+  document.getElementById("filter-dari").value = "";
+  document.getElementById("filter-sampai").value = "";
+
+  const rows = document.querySelectorAll("#data-transaksi tbody tr");
+  rows.forEach(row => row.style.display = "");
+}
+
   </script>
 
 </body>
