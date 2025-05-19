@@ -363,54 +363,81 @@ tbody tr:hover {
 
 .filter-bar {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background-color: #f9f9f9;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: center;
+  background: #f9f9f9;
+  padding: 15px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  font-family: sans-serif;
-  max-width: 280px; /* Biar pas di HP */
-  margin: 0 auto; /* Tengahin */
+  max-width: 100%;
 }
 
-.filter-bar label {
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin-bottom: 0.2rem;
-}
-
-.filter-group {
+.filter-item {
   display: flex;
   flex-direction: column;
 }
 
-.filter-bar input[type="date"] {
-  padding: 0.3rem 0.4rem;
-  font-size: 0.85rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.filter-item label {
+  font-size: 14px;
+  margin-bottom: 4px;
 }
 
-.filter-bar button {
-  padding: 0.3rem 0.7rem;
-  font-size: 0.8rem;
+.filter-item input {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 130px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-buttons button {
+  padding: 6px 12px;
+  font-size: 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  margin-right: 0.4rem;
-  margin-top: 0.5rem;
+  height: 36px;
 }
 
-.filter-bar button:first-of-type {
+.btn-filter {
   background-color: #007bff;
   color: white;
 }
 
-.filter-bar button:last-of-type {
+.btn-reset {
   background-color: #6c757d;
   color: white;
 }
+
+/* ✅ Tambahan agar tetap sejajar di HP */
+@media (max-width: 480px) {
+  .filter-bar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .filter-item input {
+    min-width: 120px;
+    font-size: 13px;
+  }
+
+  .filter-buttons {
+    flex-direction: row; /* Pastikan horizontal */
+  }
+
+  .filter-buttons button {
+    font-size: 13px;
+    padding: 5px 10px;
+    height: 34px;
+  }
+}
+
 
 /* Modal Edit & Rekapan Kas Enhancements */
 .modal-content {
@@ -547,21 +574,20 @@ tbody tr:hover {
   </div>
 
   <div class="filter-bar">
-  <div class="filter-group">
+  <div class="filter-item">
     <label for="filter-dari">Dari:</label>
     <input type="date" id="filter-dari">
   </div>
-
-  <div class="filter-group">
+  <div class="filter-item">
     <label for="filter-sampai">Sampai:</label>
     <input type="date" id="filter-sampai">
   </div>
-
-  <div>
-    <button onclick="filterByTanggal()">Filter</button>
-    <button onclick="resetFilter()">Reset</button>
+  <div class="filter-buttons">
+    <button onclick="filterByTanggal()" class="btn-filter">Filter</button>
+    <button onclick="resetFilter()" class="btn-reset">Reset</button>
   </div>
 </div>
+
 
 
 
