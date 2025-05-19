@@ -7,60 +7,107 @@
   
   <title>Saldo Pemain</title>
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      padding: 20px;
-      background-color: #f4f7fc;
-      max-width: 900px;
-      margin: auto;
-      color: #333;
-    }
+/* Reset dasar */
+* {
+  box-sizing: border-box;
+}
 
-    h1, h2, h3 {
-      color: #13007c;
-      text-align: center;
-    }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 20px;
+  background-color: #f9f9fb;
+  color: #13007c;
+  line-height: 1.5;
+}
 
-    h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
+/* Container logo dan header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-    h3 {
-      margin-top: 20px;
-      font-size: 24px;
-    }
+header .left-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-    button {
-      background-color: #13007c;
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      width: 100%;
-      max-width: 200px;
-      display: inline-block;
-      text-align: center;
-      font-size: 16px;
-      margin: 10px 0;
-    }
+header .left-logo img {
+  height: 110px;
+}
 
-    button:hover {
-      background-color: #357ABD;
-    }
+header .left-logo p:first-child {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #13007c;
+}
 
-    input, select {
-      padding: 12px;
-      margin: 8px 0;
-      width: 100%;
-      max-width: 400px;
-      display: block;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
+header .left-logo p:last-child {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #13007c;
+  font-family: 'Cherry Bomb One', cursive;
+}
+
+header img.right-logo {
+  height: 110px;
+}
+
+/* Form dan tombol input */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+select {
+  padding: 8px 12px;
+  margin: 6px 10px 10px 0;
+  border: 1.5px solid #13007c;
+  border-radius: 6px;
+  font-size: 16px;
+  min-width: 180px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+select:focus {
+  border-color: #3300ff;
+  outline: none;
+}
+
+/* Button utama */
+button {
+  background-color: #13007c;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+button:hover:not(:disabled) {
+  background-color: #3300ff;
+}
+
+button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+/* Judul */
+h2, h3 {
+  color: #13007c;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
 
     table {
       width: 100%;
@@ -101,80 +148,132 @@
       display: none;
     }
 
-    #search {
-      padding: 12px;
-      margin: 10px 0;
-      width: 100%;
-      max-width: 300px;
-      display: inline-block;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
 
-    #overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-      display: none;
-    }
-
-    #modal, #loginModal {
-  position: fixed;
-  z-index: 1000;
-  background: #fff;
-  padding: 30px;
-  border: 1px solid #ccc;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Pusatkan modal di tengah layar */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  display: none;
-  width: 400px;
-  border-radius: 8px;
-  text-align: center; /* Pusatkan teks dan konten dalam modal */
+tbody td[data-label="Saldo"][style*="color: red"] {
+  color: #d32f2f;
 }
 
+tbody td[data-label="Saldo"][style*="color: green"] {
+  color: #388e3c;
+}
+
+.aksi-th, .aksi-td {
+  width: 100px;
+  text-align: center;
+}
+
+.table-actions button {
+  background: none;
+  border: none;
+  margin: 0 5px;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.2s ease;
+}
+
+.table-actions button:hover {
+  transform: scale(1.1);
+}
+
+.table-actions img {
+  width: 22px;
+  height: 22px;
+}
+
+/* Kode Unik display */
+#kodeUnikDisplay {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: #13007c;
+}
+
+/* Modal Overlay */
 #overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
   display: none;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+/* Modal umum */
+#modal, #loginModal {
+  position: fixed;
+  display: none;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(19, 0, 124, 0.3);
+  z-index: 101;
+  max-width: 320px;
+  width: 90%;
 }
 
 #modal h3, #loginModal h3 {
-  margin-bottom: 20px;
+  margin-top: 0;
   color: #13007c;
+  margin-bottom: 15px;
 }
 
 #modal input, #loginModal input {
   width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  text-align: center; /* Pusatkan teks dalam input */
+  margin-bottom: 15px;
 }
 
-#modal button, #loginModal button {
-  width: 100%;
-  padding: 12px;
-  background-color: #13007c;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s;
+/* Loading modal */
+#loadingModal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(255, 255, 255, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 105;
+  font-weight: 700;
+  color: #13007c;
 }
 
-#modal button:hover, #loginModal button:hover {
-  background-color: #357ABD;
+#loadingContent img.loading-gif {
+  width: 70px;
+  margin-top: 15px;
 }
 
+/* Responsive */
+@media screen and (max-width: 720px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 
-    .aksi-td {
+  header img.right-logo {
+    align-self: flex-end;
+    height: 80px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="password"],
+  select {
+    min-width: 100%;
+    margin-right: 0;
+  }
+
+  button {
+    width: 100%;
+    margin: 8px 0;
+  }
+
+}
+
+.aksi-td {
       display: none;
     }
 
@@ -202,192 +301,6 @@
       filter: hue-rotate(0deg); /* Red */
     }
 
-    @media (max-width: 600px) {
-  body {
-    padding: 10px;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  h3 {
-    font-size: 18px;
-  }
-
-  button {
-    width: 100%;
-    font-size: 14px;
-    padding: 10px;
-    max-width: 100%;
-  }
-
-  input, select {
-    font-size: 14px;
-    padding: 10px;
-    max-width: 100%;
-  }
-
-  #search {
-    max-width: 100%;
-    font-size: 14px;
-  }
-
-  table, thead, tbody, th, td, tr {
-    width: 100%;
-  }
-
-  tr {
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    background-color: #fff;
-  }
-
-  td {
-    text-align: left;
-    padding: 8px;
-    border: none;
-    position: relative;
-  }
-
-  td[data-label="Nama"],
-th:nth-child(1) {
-  width: 40%; /* atau bisa 25% */
-}
-
-td[data-label="Saldo"],
-th:nth-child(2) {
-  width: 60%; /* sisanya */
-}
-
-  .table-actions {
-    justify-content: start;
-  }
-
-  /* Modifikasi untuk modal login */
-  #loginModal {
-    position: fixed;
-    z-index: 1000;
-    background: #fff;
-    padding: 20px;
-    border: 1px solid #ccc;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Pusatkan modal di tengah layar */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    display: none;
-    width: 300px; /* Ukuran lebih kecil */
-    border-radius: 8px;
-    text-align: center;
-  }
-
-  #loginModal h3 {
-    margin-bottom: 15px; /* Mengurangi jarak antara judul dan input */
-    color: #13007c;
-    font-size: 18px; /* Ukuran teks judul lebih kecil */
-  }
-
-  #loginModal input {
-    width: 100%;
-    margin-top: 10px;
-    padding: 8px; /* Lebih kecil */
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 14px; /* Ukuran font input lebih kecil */
-  }
-
-  #loginModal button {
-    width: 100%;
-    padding: 10px;
-    background-color: #13007c;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s;
-    font-size: 14px; /* Ukuran font lebih kecil */
-  }
-
-  #loginModal button:hover {
-    background-color: #2b1b81;
-  }
-
-  /* Mengubah tombol 'Tutup' agar terlihat lebih kecil */
-  #loginModal button:nth-of-type(2) {
-    background-color: #a81010;
-  }
-}
-
-/* Popup Loading */
-#loadingModal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-#loadingContent {
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.spinner {
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #13007c; /* Blue */
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-gif {
-  width: 60px;
-  height: 60px;
-  margin-top: 10px;
-}
-
-#modal, #loginModal {
-  width: 350px;  /* Sesuaikan lebar modal */
-}
-
-#modal input, #loginModal input {
-  width: 100%;
-  max-width: 300px;  /* Mengatur max-width untuk input */
-  margin-top: 10px;
-  padding: 10px;
-}
-
-#modal button, #loginModal button {
-  width: 100%;
-  padding: 12px;
-  background-color: #13007c;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s;
-  font-size: 16px;
-  max-width: 300px;  /* Atur max-width untuk tombol */
-}
 
 
   </style>
